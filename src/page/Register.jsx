@@ -1,13 +1,15 @@
 // src/components/Register.js
-import React from 'react';
+import React, { useContext } from 'react';
 import { FaUserAlt, FaEnvelope, FaLock } from 'react-icons/fa';
 import BackBtnNavbar from '../components/layout/BackBtnNavbar';
 import { submitFormData } from '../hooks/api';
 import useForm from '../hooks/useForm';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const Register = () => {
  const navigate =  useNavigate();
+ const {setToken} = useContext(AuthContext);
 
   const initialValues = {
     fullName: '',
@@ -20,6 +22,8 @@ const Register = () => {
     try{
       const response = await submitFormData(values, "register")
       console.log(response)
+      // localStorage.setItem('token', response.token);
+      setToken(response.token)
       navigate('/')
     }catch(error){
       console.log(error)

@@ -18,7 +18,7 @@ const Login = () => {
     try {
       const response = await submitFormData(values,"login");
       console.log('Login successful', response);
-
+      localStorage.setItem('token', response.token);
       // Handle successful login (e.g., redirect to dashboard)
       navigate('/');
     } catch (error) {
