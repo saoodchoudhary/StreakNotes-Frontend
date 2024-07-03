@@ -15,13 +15,15 @@ const AuthProvider = ({ children }) => {
 
     }, []);
 
-    const setToken = (token) => {
+    const setToken = (token, uid) => {
         localStorage.setItem('token', token);
+        localStorage.setItem('uid', uid);
         setAuthState(token);
     }
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('uid');
         setAuthState({token : null});
     }
     return (

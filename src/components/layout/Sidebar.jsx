@@ -2,8 +2,13 @@
 import React from 'react';
 import { FaTimes, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { IoPerson } from 'react-icons/io5';
+import useFetchProfile from '../../hooks/useFetchProfile';
 
 const Sidebar = ({ isOpen, onClose }) => {
+
+ const {profileData, loading, error}= useFetchProfile();
+  if (loading) return <p>Loading...</p>;
+
   return (
     <div className={`fixed min-h-[100vh] inset-0 transition-opacity duration-300 ${isOpen ? 'opacity-100 bg-gray-900 bg-opacity-50' : 'opacity-0 pointer-events-none'}`}>
       <div className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -12,8 +17,8 @@ const Sidebar = ({ isOpen, onClose }) => {
          
             <div className='flex flex-col justify-center gap-[2px] align-middle w-full  '>
             <img src="/profile-logo.jpg" alt="logo" className="w-10 h-10 rounded-full self-center object-cover" />
-            <div className="text-[12px] font-medium self-center">Userid</div>
-            <div className="text-[14px] font-semibold self-center">Saood Ahmad</div>
+            <div className="text-[12px] font-medium self-center">{profileData.username}</div>
+            <div className="text-[14px] font-semibold self-center">{profileData.fullName}</div>
             </div>
           <button onClick={onClose} className=' absolute top-4 right-4'>
             <FaTimes className="text-gray-700" />

@@ -1,37 +1,39 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { FaUserFriends, FaNotesMedical, FaUser, FaStar, FaTrophy } from 'react-icons/fa';
 import 'tailwindcss/tailwind.css';
+import useFetchProfile from '../hooks/useFetchProfile';
 
 const suggestionsFriends = [
   {
     id: 1,
     name: 'Jane Smith',
     username: 'janesmith',
-    image: 'https://via.placeholder.com/50',
+    image: '/profile-logo.jpg',
   },
   {
     id: 2,
     name: 'John Doe',
     username: 'johndoe',
-    image: 'https://via.placeholder.com/50',
+    image: '/profile-logo.jpg',
   },
   {
     id: 3,
     name: 'Alice Johnson',
     username: 'alicejohnson',
-    image: 'https://via.placeholder.com/50',
+    image: '/profile-logo.jpg',
   },
   {
     id: 4,
     name: 'Bob Brown',
     username: 'bobbrown',
-    image: 'https://via.placeholder.com/50',
+    image: '/profile-logo.jpg',
   },
   {
     id: 5,
     name: 'Charlie White',
     username: 'charliewhite',
-    image: 'https://via.placeholder.com/50',
+    image: '/profile-logo.jpg',
   },
 ];
 
@@ -56,6 +58,39 @@ const Achievement = [
 const Profile = () => {
   const profileImage = '/profile-logo.jpg';
   const bannerImage = '/profile-banner.jpg';
+  // const profileData ={
+  //   fullName: "",
+  //   username: "",
+  //   followers: 0,
+  //   following: 0,
+  //   streaks: 0,
+  //   score: 0,
+  //   profileType: "",
+  //   profileImage: "",
+  //   profileBannerImage: "",
+  //   totalNotes: 0,
+  //   createdAt: "",
+  //   updatedAt: "",
+  // });
+
+  // useEffect(() => {
+  //   const fetchProfileData = async () => {
+  //     // Fetch profile data
+  //     const uid =  localStorage.getItem('uid');
+  //     const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/profile/${uid}`);
+  //     const data = response.data;
+  //     console.log(data);
+  //     setProfileData(data);
+  //   };
+  //   fetchProfileData();
+  // }, []);
+
+  const { profileData, loading, error } = useFetchProfile();
+ console.log(profileData);
+
+  if (!profileData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center pb-[50px]">
@@ -67,24 +102,24 @@ const Profile = () => {
           <img src={profileImage} alt="Profile" className="w-32 h-32 rounded-full border-4 border-white -mt-16 object-cover" />
         </div>
         <div className="text-center mb-4">
-          <h1 className="text-2xl font-bold">John Doe</h1>
-          <p className="text-gray-600">@johndoe</p>
+          <h1 className="text-2xl font-bold">{profileData.fullName}</h1>
+          <p className="text-gray-600">{profileData.username}</p>
         </div>
         <div className="flex justify-around items-center mb-4">
           
           <div className="flex items-center">
             <FaUserFriends className="text-green-500 mr-2" />
-            <span>Followers: 300</span>
+            <span>Followers: {profileData.followers}</span>
           </div>
           <div className="flex items-center">
             <FaUser className="text-yellow-500 mr-2" />
-            <span>Following: 180</span>
+            <span>Following: {profileData.following}</span>
           </div>
         </div>
         <div className="mb-6">
         <div className="flex items-center justify-center">
             <FaNotesMedical className="text-blue-500 mr-2" />
-            <span>Total Notes: 120</span>
+            <span>Total Notes: {profileData.totalNotes}</span>
           </div>
         </div>
         <div className="mb-6">
@@ -92,11 +127,11 @@ const Profile = () => {
         <div className="flex justify-around items-center mb-4">
           <div className="flex items-center">
             <FaStar className="text-red-500 mr-2" />
-            <span>Streak: 45</span>
+            <span>Streak: {profileData.streaks}</span>
           </div>
           <div className="flex items-center">
             <FaTrophy className="text-purple-500 mr-2" />
-            <span>Score: 1500</span>
+            <span>Score: {profileData.score}</span>
           </div>
         </div>
         </div>
@@ -111,24 +146,6 @@ const Profile = () => {
                 </div>
               </div>
             ))}
-            {/* <div className="inline-block w-1/2 p-2">
-              <div className="bg-gray-200 rounded-lg p-4">
-                <FaTrophy className="text-purple-500 mb-2" />
-                <p>Achievement 1</p>
-              </div>
-            </div>
-            <div className="inline-block w-1/2 p-2">
-              <div className="bg-gray-200 rounded-lg p-4">
-                <FaTrophy className="text-purple-500 mb-2" />
-                <p>Achievement 2</p>
-              </div>
-            </div>
-            <div className="inline-block w-1/2 p-2">
-              <div className="bg-gray-200 rounded-lg p-4">
-                <FaTrophy className="text-purple-500 mb-2" />
-                <p>Achievement 2</p>
-              </div>
-            </div> */}
           </div>
         </div>
         <div>
@@ -137,7 +154,7 @@ const Profile = () => {
             {suggestionsFriends.map((friend) => (
               <div key={friend.id} className=" rounded-lg inline-block w-[136px] mr-3 py-4 bg-gray-200">
                 <div className="flex flex-col items-center justify-center text-center">
-                  <img src={friend.image} alt="Friend" className="w-12 h-12 rounded-full self-center" />
+                  <img src={friend.image} alt="Friend" className="w-12 h-12 rounded-full self-center border border-white object-cover" />
                   <div>
                     <p className="font-semibold mt-1 text-[14px]">{friend.name}</p>
                     <p className="text-gray-600 text-[12px]">@{friend.username}</p>
@@ -146,16 +163,6 @@ const Profile = () => {
                 </div>
               </div>
             ))}
-            {/* <div className="inline-block w-1/2 p-2">
-              <div className="bg-gray-200 rounded-lg p-4 flex flex-col items-center justify-center">
-                <img src="https://via.placeholder.com/50" alt="Friend" className="w-12 h-12 rounded-full self-center" />
-                <div>
-                  <p className="font-semibold mt-1">Jane Smith</p>
-                  <p className="text-gray-600">@janesmith</p>
-                </div>
-              </div>
-            </div> */}
-            {/* Add more suggested friends as needed */}
           </div>
         </div>
       </div>

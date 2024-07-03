@@ -1,12 +1,15 @@
 // src/components/Login.js
-import React from 'react';
+import React, { useContext } from 'react';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import BackBtnNavbar from '../components/layout/BackBtnNavbar';
 import useForm from '../hooks/useForm';
 import { submitFormData } from '../hooks/api';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
+  
+ const {setToken} = useContext(AuthContext);
   const initialValues = {
     email: '',
     password: '',
@@ -18,7 +21,9 @@ const Login = () => {
     try {
       const response = await submitFormData(values,"login");
       console.log('Login successful', response);
-      localStorage.setItem('token', response.token);
+      // localStorage.setItem('token', response.token);
+      
+      setToken(response.token, response.uid)
       // Handle successful login (e.g., redirect to dashboard)
       navigate('/');
     } catch (error) {

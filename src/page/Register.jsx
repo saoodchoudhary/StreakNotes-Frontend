@@ -23,7 +23,7 @@ const Register = () => {
       const response = await submitFormData(values, "register")
       console.log(response)
       // localStorage.setItem('token', response.token);
-      setToken(response.token)
+      setToken(response.token, response.uid)
       navigate('/')
     }catch(error){
       console.log(error)
