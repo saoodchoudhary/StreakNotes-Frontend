@@ -54,8 +54,8 @@ const Achievement = [
 ]
 
 const Profile = () => {
-  const profileImage = 'https://via.placeholder.com/150';
-  const bannerImage = 'https://via.placeholder.com/600x200';
+  const profileImage = '/profile-logo.jpg';
+  const bannerImage = '/profile-banner.jpg';
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center pb-[50px]">
@@ -64,7 +64,7 @@ const Profile = () => {
       </div>
       <div className="w-11/12 md:w-3/4 lg:w-1/2 bg-white shadow-md rounded-lg -mt-20 mb-6 p-4">
         <div className="flex justify-center mb-4">
-          <img src={profileImage} alt="Profile" className="w-32 h-32 rounded-full border-4 border-white -mt-16" />
+          <img src={profileImage} alt="Profile" className="w-32 h-32 rounded-full border-4 border-white -mt-16 object-cover" />
         </div>
         <div className="text-center mb-4">
           <h1 className="text-2xl font-bold">John Doe</h1>
