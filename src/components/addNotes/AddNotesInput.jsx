@@ -54,8 +54,13 @@ const AddNotesInput = () => {
   const saveNotes = async () => {
     console.log('saving note');
     setIsLoading(true);
+
     
-     axios.post('http://192.168.0.108:8000/api/notes/save-note', { noteId, content: editorRef.current.innerHTML, uid: localStorage.getItem('uid')})
+        // get today's date
+        const todayDate = new Date();
+      const dateId = todayDate.toISOString().slice(0, 10);
+
+     axios.post('http://192.168.0.108:8000/api/notes/save-note', { noteId, dateId: dateId,    content: editorRef.current.innerHTML, uid: localStorage.getItem('uid')})
      .then((response) => { 
         console.log('response', response.data);
         setIsSaved(true);
@@ -77,7 +82,7 @@ const AddNotesInput = () => {
     console.log(content);
     const saveNote = setTimeout(() => {
        saveNotes();
-    }, 2000);
+    }, 800);
 
     return () => clearTimeout(saveNote); 
   }, [content]);
@@ -114,12 +119,12 @@ const AddNotesInput = () => {
       <div className='fixed top-[15px] right-3 z-50'>
        {isLoading ? <div className=' h-[22px] w-[22px] mt-1 mr-2 border-[2px] border-t-transparent  animate-spin rounded-full border-blue-500'> </div> : <button className='relative text-blue-500  '>
           
-          {(isSaved) ? <div className='px-2 py-1 '>Saved</div> : <div onClick={saveNotes}  className='px-2 py-1  animate-pulse'>Save.. </div> }
+          {(isSaved) ? <div className='px-2 py-1 '>Saved</div> : <div  className='px-2 py-1  animate-pulse'>Save.. </div> }
           </button>  }
       </div>
       <div 
         ref={editorRef} 
-        className="w-full min-h-[80vh] mt-[108px] p-4 bg-white outline-none overflow-auto"
+        className="w-full min-h-[90vh] mt-[108px] p-4 bg-white outline-none overflow-auto"
         contentEditable={true}
         
         placeholder="Write your note here..."

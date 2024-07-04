@@ -10,6 +10,7 @@ import Login from './page/Login';
 import RecievedNotes from './page/RecievedNotes';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from "./components/ProtectedRoutes"
+import NotesList from './page/NotesList';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />}>
             <Route index element={<ProtectedRoute element={HomePage} />} />
             <Route path="calendar/:id" element={<ProtectedRoute element={StreakCalendar} />} />
+            <Route path="notes/list/:id" element={<ProtectedRoute element={NotesList} />} />
             <Route path="profile/:id" element={<ProtectedRoute element={Profile} />} />
           </Route>
           <Route path="addNotes/:id" element={<ProtectedRoute element={AddNotes} />} />
