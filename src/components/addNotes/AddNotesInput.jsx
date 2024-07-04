@@ -9,6 +9,8 @@ const AddNotesInput = () => {
   const editorRef = useRef(null);
   const [noteId, setNoteId] = useState(null); // to store the note ID
   const [content, setContent] = useState('');
+  const [isSaved, setIsSaved] = useState(false); // to check if the note is saved or not
+  const [isLoading, setIsLoading] = useState(false); // to check if the note is saved or not
   const [activeFormats, setActiveFormats] = useState({
     bold: false,
     italic: false,
@@ -51,25 +53,38 @@ const AddNotesInput = () => {
 
   const saveNotes = async () => {
     console.log('saving note');
-    try {
-      const response = await axios.post('http://192.168.0.108:8000/api/notes/save-note', { noteId, content: editorRef.current.innerHTML, uid: localStorage.getItem('uid')});
-      if (!noteId) {
-        console.log('noteId', response.data.noteId);
-        setNoteId(response.data.noteId);
-      }
-    } catch (error) {
-      console.error('Failed to save note', error);
-    }
+    setIsLoading(true);
+    
+     axios.post('http://192.168.0.108:8000/api/notes/save-note', { noteId, content: editorRef.current.innerHTML, uid: localStorage.getItem('uid')})
+     .then((response) => { 
+        console.log('response', response.data);
+        setIsSaved(true);
+        setIsLoading(false);
+        if (!noteId) {
+          console.log('noteId', response.data.noteId);
+          setNoteId(response.data.noteId);
+        }
+
+     }).catch((error) => {
+       console.error('Failed to save note', error); 
+       setIsLoading(false);
+       });
+   
   };
 
   useEffect(() => {
+    setIsSaved(false);
     console.log(content);
     const saveNote = setTimeout(() => {
        saveNotes();
-    }, 10000);
+    }, 2000);
 
     return () => clearTimeout(saveNote); 
   }, [content]);
+
+  // useEffect(() => {
+  //   setIsSaved(false);
+  // }, [content]);
 
 
   // const handleImageUpload = async (event) => {
@@ -96,6 +111,12 @@ const AddNotesInput = () => {
 
   return (
     <div className="flex flex-col h-full">
+      <div className='fixed top-[15px] right-3 z-50'>
+       {isLoading ? <div className=' h-[22px] w-[22px] mt-1 mr-2 border-[2px] border-t-transparent  animate-spin rounded-full border-blue-500'> </div> : <button className='relative text-blue-500  '>
+          
+          {(isSaved) ? <div className='px-2 py-1 '>Saved</div> : <div onClick={saveNotes}  className='px-2 py-1  animate-pulse'>Save.. </div> }
+          </button>  }
+      </div>
       <div 
         ref={editorRef} 
         className="w-full min-h-[80vh] mt-[108px] p-4 bg-white outline-none overflow-auto"
@@ -152,7 +173,7 @@ const AddNotesInput = () => {
           </button>
           <button 
             onClick={() => formatText('foreColor', 'black')} 
-            className={`px-2 py-1 border rounded ${activeFormats.blackText ? 'bg-red-300' : 'bg-gray-200'}`}
+            className={`px-2 py-1 border rounded ${activeFormats.blackText ? 'bg-gray-500' : 'bg-gray-200'}`}
           >
             <MdFormatColorText size={20} color="black" />
           </button>

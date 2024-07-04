@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FaUserFriends, FaNotesMedical, FaUser, FaStar, FaTrophy } from 'react-icons/fa';
 import 'tailwindcss/tailwind.css';
 import useFetchProfile from '../hooks/useFetchProfile';
@@ -58,32 +58,6 @@ const Achievement = [
 const Profile = () => {
   const profileImage = '/profile-logo.jpg';
   const bannerImage = '/profile-banner.jpg';
-  // const profileData ={
-  //   fullName: "",
-  //   username: "",
-  //   followers: 0,
-  //   following: 0,
-  //   streaks: 0,
-  //   score: 0,
-  //   profileType: "",
-  //   profileImage: "",
-  //   profileBannerImage: "",
-  //   totalNotes: 0,
-  //   createdAt: "",
-  //   updatedAt: "",
-  // });
-
-  // useEffect(() => {
-  //   const fetchProfileData = async () => {
-  //     // Fetch profile data
-  //     const uid =  localStorage.getItem('uid');
-  //     const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/profile/${uid}`);
-  //     const data = response.data;
-  //     console.log(data);
-  //     setProfileData(data);
-  //   };
-  //   fetchProfileData();
-  // }, []);
 
   const { profileData, loading, error } = useFetchProfile();
  console.log(profileData);
@@ -94,47 +68,46 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center pb-[50px]">
-      <div className="w-full">
-        <img src={bannerImage} alt="Banner" className="w-full h-56 object-cover" />
+      <div className=" w-full">
+      <div className='absolute top-[60px] right-0 bg-gray-500 z-10 text-[10px] px-3 py-1 bg-gradient-to-r to-gray-100  from-transparent'>Joined 24-02-2024</div>
+        <img src={bannerImage} alt="Banner" className="w-full h-[150px] object-cover" />
       </div>
-      <div className="w-11/12 md:w-3/4 lg:w-1/2 bg-white shadow-md rounded-lg -mt-20 mb-6 p-4">
-        <div className="flex justify-center mb-4">
-          <img src={profileImage} alt="Profile" className="w-32 h-32 rounded-full border-4 border-white -mt-16 object-cover" />
+      <div className="w-full bg-white shadow-md rounded-lg  mb-6 px-4 pb-4">
+        <div className="flex gap-[20px] mb-4">
+          <img src={profileImage} alt="Profile" className="w-[100px] h-[100px] rounded-full border-4 border-white -mt-7 object-cover" />
+          <div className="mt-2">
+          <h1 className="text-xl font-semibold">{profileData.fullName}</h1>
+          <p className="text-gray-600 text-[12px]">@{profileData.username}</p>
         </div>
-        <div className="text-center mb-4">
-          <h1 className="text-2xl font-bold">{profileData.fullName}</h1>
-          <p className="text-gray-600">{profileData.username}</p>
         </div>
-        <div className="flex justify-around items-center mb-4">
+        
+        <div className="flex justify-around items-center mb-8">
           
           <div className="flex items-center">
             <FaUserFriends className="text-green-500 mr-2" />
-            <span>Followers: {profileData.followers}</span>
+            <span>Followers {profileData.followers}</span>
           </div>
           <div className="flex items-center">
             <FaUser className="text-yellow-500 mr-2" />
-            <span>Following: {profileData.following}</span>
+            <span>Following {profileData.following}</span>
           </div>
         </div>
-        <div className="mb-6">
-        <div className="flex items-center justify-center">
-            <FaNotesMedical className="text-blue-500 mr-2" />
-            <span>Total Notes: {profileData.totalNotes}</span>
+        <div className="mb-6 flex bg-cyan-800 rounded-sm justify-around px-2 text-white py-4 text-center">
+          <div className="flex flex-col gap-1 py-1 items-center justify-center ">
+          <div className='flex'>  <FaNotesMedical className="text-white mr-1 self-center" /> Notes</div>
+            <span>{profileData.totalNotes}</span>
+            </div>
+            <div className='rounded-md bg-white w-[2px]'></div>
+          <div className="flex flex-col  gap-1 items-center justify-center">
+          <div className='flex'>  <FaStar className="text-white mr-1 self-center" /> Streak</div>
+            <span> {profileData.streaks}</span>
+            </div>
+            <div className='rounded-md bg-white w-[2px]'></div>
+          <div className="flex flex-col  gap-1 items-center justify-center">
+          <div className='flex'>  <FaTrophy className="text-white mr-1 self-center" /> Score</div>
+            <span>{profileData.score}</span>
+            </div>
           </div>
-        </div>
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Statistic</h2>
-        <div className="flex justify-around items-center mb-4">
-          <div className="flex items-center">
-            <FaStar className="text-red-500 mr-2" />
-            <span>Streak: {profileData.streaks}</span>
-          </div>
-          <div className="flex items-center">
-            <FaTrophy className="text-purple-500 mr-2" />
-            <span>Score: {profileData.score}</span>
-          </div>
-        </div>
-        </div>
         <div className="mb-6">
           <h2 className="text-xl font-semibold mb-2">Achievements</h2>
           <div className="overflow-x-auto whitespace-nowrap no-scrollbar">
