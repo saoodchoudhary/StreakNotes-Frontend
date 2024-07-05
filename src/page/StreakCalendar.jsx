@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { addMonths, format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, getDay } from 'date-fns';
 import { Box } from '@mui/material';
 import '../styles/Calendar.css';
+import axios from 'axios';
 
 const StreakCalendar = () => {
   const initialYear = 2024;
@@ -33,7 +34,29 @@ const StreakCalendar = () => {
     };
   }, []);
 
-  const streakDates = ['2024-07-10', '2024-07-15']; // Example streak dates
+  const [streakDates, setStreakDates] = useState(['2024-07-10']);
+  const [streakRestoreDates, setStreakRestoreDates] = useState([]);
+
+
+  useEffect(() => {
+    const fetchStreakAndRestoreDates = async () => {
+      try{
+        const response = await axios.post(`${import.meta.env.VITE_API_URI}/streaks/getStreakAndRestoreDates`, {
+          userId: localStorage.getItem('uid')
+        });
+        console.log(response.data);
+        setStreakDates(response.data.streakDates);
+        setStreakRestoreDates(response.data.streakRestoreDates);
+      }
+      catch(error){
+        console.log(error);
+      }
+    };
+
+    fetchStreakAndRestoreDates();
+  }, []);
+
+  // const streakDates = ['2024-07-10', '2024-07-15']; // Example streak dates
   const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   return (

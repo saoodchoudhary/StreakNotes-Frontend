@@ -20,6 +20,8 @@ const useFetchProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  
+
   useEffect(() => {
     const fetchProfileData = async () => {
       try {

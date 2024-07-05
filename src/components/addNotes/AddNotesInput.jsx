@@ -4,6 +4,7 @@ import { BiHeading } from 'react-icons/bi';
 import { MdFormatColorText } from 'react-icons/md';
 import axios from 'axios';
 import { FaImage } from 'react-icons/fa';
+import { IoSend } from 'react-icons/io5';
 
 const AddNotesInput = () => {
   const editorRef = useRef(null);
@@ -202,6 +203,7 @@ const AddNotesInput = () => {
           </button>
         </div>
       </div>
+      <div className='fixed flex justify-center align-middle bottom-10 right-8 rounded-full bg-green-700 text-white p-3'><IoSend className='self-center'/></div>
     </div>
   );
 };
