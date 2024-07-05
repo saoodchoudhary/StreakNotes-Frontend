@@ -9,7 +9,22 @@
     }
   }
   
-  .slide-in-right {
+  .slide-in-up {
     animation: slideInRight 0.15s ease-out;
+  }
+
+  @keyframes slideInUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .slide-in-up {
+    animation: slideInUp  0.15s ease-out;
   }
   

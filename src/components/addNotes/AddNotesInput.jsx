@@ -5,11 +5,13 @@ import { MdFormatColorText } from 'react-icons/md';
 import axios from 'axios';
 import { FaImage } from 'react-icons/fa';
 import { IoSend } from 'react-icons/io5';
+import SendNotesComp from './SendNotesComp';
 
 const AddNotesInput = () => {
   const editorRef = useRef(null);
   const [noteId, setNoteId] = useState(null); // to store the note ID
   const [content, setContent] = useState('');
+  const [isSendNotes, setIsSendNotes] = useState(false); 
   const [isSaved, setIsSaved] = useState(false); // to check if the note is saved or not
   const [isLoading, setIsLoading] = useState(false); // to check if the note is saved or not
   const [activeFormats, setActiveFormats] = useState({
@@ -78,6 +80,8 @@ const AddNotesInput = () => {
    
   };
 
+  
+
   useEffect(() => {
     setIsSaved(false);
     console.log(content);
@@ -88,31 +92,7 @@ const AddNotesInput = () => {
     return () => clearTimeout(saveNote); 
   }, [content]);
 
-  // useEffect(() => {
-  //   setIsSaved(false);
-  // }, [content]);
 
-
-  // const handleImageUpload = async (event) => {
-  //   const file = event.target.files[0];
-  //   if (!file) return;
-
-  //   const formData = new FormData();
-  //   formData.append('image', file);
-
-  //   try {
-  //     const response = await axios.post('http://192.168.0.108:8000/api/upload', formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-  //     const imageUrl = response.data.imageUrl;
-  //     document.execCommand('insertImage', false, imageUrl);
-  //     setContent(editorRef.current.innerHTML);
-  //   } catch (error) {
-  //     console.error('Failed to upload image', error);
-  //   }
-  // };
 
 
   return (
@@ -203,7 +183,9 @@ const AddNotesInput = () => {
           </button>
         </div>
       </div>
-      <div className='fixed flex justify-center align-middle bottom-10 right-8 rounded-full bg-green-700 text-white p-3'><IoSend className='self-center'/></div>
+      <div onClick={()=>{setIsSendNotes(prev => !prev)}} className='fixed flex justify-center align-middle bottom-10 right-8 rounded-full bg-green-700 text-white p-3'><IoSend className='self-center'/></div>
+
+    {isSendNotes &&  <SendNotesComp NotesSample={[]} noteId={noteId} onClose={()=>{setIsSendNotes(false)}} /> }
     </div>
   );
 };
