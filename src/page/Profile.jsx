@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { FaUserFriends, FaNotesMedical, FaUser, FaStar, FaTrophy } from 'react-icons/fa';
 import 'tailwindcss/tailwind.css';
 import useFetchProfile from '../hooks/useFetchProfile';
+import { Link } from 'react-router-dom';
 
 const Achievement = [
   {
@@ -81,14 +82,14 @@ const Profile = () => {
         </div>
         
         <div className="flex justify-around items-center mb-8">
-          <div className="flex items-center">
+          <Link to={`/profile/follower-following/followers/${localStorage.getItem("uid")}`} className="flex items-center">
             <FaUserFriends className="text-green-500 mr-2" />
             <span>Followers {profileData.followers}</span>
-          </div>
-          <div className="flex items-center">
+          </Link>
+          <Link to={`/profile/follower-following/following/${localStorage.getItem("uid")}`} className="flex items-center">
             <FaUser className="text-yellow-500 mr-2" />
             <span>Following {profileData.following}</span>
-          </div>
+          </Link>
         </div>
         <div className="mb-6 flex bg-cyan-800 rounded-sm justify-around px-2 text-white py-4 text-center">
           <div className="flex flex-col gap-1 py-1 items-center justify-center ">
