@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import BackBtnNavbar from '../components/layout/BackBtnNavbar';
 // const followers = [
 //     { id: 1, name: 'John Doe', profileImage: 'https://via.placeholder.com/150' },
@@ -36,7 +36,8 @@ const FollowerFollowingPage = () => {
     , []);
 
     return (
-        <div className="flex flex-col items-center bg-gray-100 min-h-screen p-4">
+        <div className="flex flex-col items-center bg-gray-100 min-h-screen p-4"
+        onLoad={()=> window.scroll(0 , 0)}>
             <BackBtnNavbar text={activeTab === 'followers' ? 'Followers' : 'Following'} />
             <div className="w-full max-w-md bg-white mt-[60px] rounded-lg shadow-md overflow-hidden">
                 <div className="flex justify-around border-b">
@@ -58,25 +59,25 @@ const FollowerFollowingPage = () => {
                     </button>
                 </div>
 
-                <div className="p-4">
+                <div className="py-4 px-2">
                     {activeTab === 'followers' ? (
-                        <ul>
+                        <div>
                             {followers.map((follower) => (
-                                <li key={follower.id} className="flex items-center py-2 border-b">
+                                <Link to={`/user/profile/${follower._id}`} key={follower._id} className="flex items-center py-2 border-b px-1">
                                     <img src={"/profile-logo.jpg"} alt={follower.fullName} className="w-10 h-10 rounded-full mr-3 object-cover" />
                                     <span>{follower.fullName}</span>
-                                </li>
+                                </Link>
                             ))}
-                        </ul>
+                        </div>
                     ) : (
-                        <ul>
+                        <div>
                             {following.map((followed) => (
-                                <li key={followed._id} className="flex items-center py-2 border-b">
+                                <Link to={`/user/profile/${followed._id}`} key={followed._id} className="flex items-center py-2 border-b">
                                     <img src={"/profile-logo.jpg"} alt={followed.fullName} className="w-10 h-10 rounded-full mr-3 object-cover" />
                                     <span>{followed.fullName}</span>
-                                </li>
+                                </Link>
                             ))}
-                        </ul>
+                        </div>
                     )}
                 </div>
             </div>

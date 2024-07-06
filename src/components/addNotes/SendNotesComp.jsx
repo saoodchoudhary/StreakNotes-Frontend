@@ -2,11 +2,18 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { IoArrowBack } from 'react-icons/io5';
 import "../../styles/pageAnimation.css"
+import { useNavigate } from 'react-router-dom';
 
 const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
     const [getSendUserForNotes, setGetSendUserForNotes] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [sendNotesSuccess, setSendNotesSuccess] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
+
+
 
     useEffect(() => {
         const fetchSendUserForNotes = async () => {
@@ -29,6 +36,12 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
     };
 
     const handleSendNotes = async () => {
+        setIsLoading(true)
+        
+        // get today's date
+        const todayDate = new Date();
+      const dateId = todayDate.toISOString().slice(0, 10);
+
         console.log(selectedUsers);
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URI}/notes/send`, {
@@ -36,6 +49,17 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
                 userIds: selectedUsers,
             });
             console.log(response.data);
+            setSendNotesSuccess(true);
+            setIsLoading(false);
+
+            const timer = setTimeout(() => {
+                const path = `/notes/list/${dateId}`;
+                setSendNotesSuccess(false);
+                clearTimeout(timer);
+                onClose();
+                navigate(path);
+            }, 800);
+            
             // Handle success (e.g., show a success message or update state)
         } catch (err) {
             console.error(err);
@@ -62,7 +86,7 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
                     className='w-full p-2 border rounded'
                 />
             </div>
-          {selectedUsers.length > 0 &&  <div className='px-5  h-[80px] flex gap-5 border-t border-b no-scrollbar overflow-x-auto '>
+          {selectedUsers.length > 0 &&  <div className='px-5  h-[80px] flex gap-5 border-t py-3 shadow-sm bg-white mb-[2px] border-b no-scrollbar overflow-x-auto '>
                 {selectedUsers.map((userId) => {
                     const user = getSendUserForNotes.find(user => user._id === userId);
                     return (
@@ -87,9 +111,16 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
                 ))}
             </div>
             <div className='pb-4 p-4 bg-white fixed bottom-0 w-full z-20'>
-                <button onClick={handleSendNotes} className='w-full p-2 bg-blue-500 text-white rounded'>
+             { !sendNotesSuccess ? (<button onClick={handleSendNotes} className='w-full p-2 bg-blue-500 text-white rounded'>
                     Send Notes
-                </button>
+                </button>):(
+                    isLoading ? <div className='w-full border border-blue-500 rounded flex justify-center p-2'> 
+                    <div className=' w-[26px] h-[26px]  rounded-full border-blue-500 border-t-transparent border-[3px] animate-spin'></div>
+                    </div> :
+                      <div className='w-full border bg-green-500 text-white rounded flex justify-center p-2'> 
+                        <span>Notes Sent</span>
+                    </div>
+                )}   
             </div>
         </div>
     );

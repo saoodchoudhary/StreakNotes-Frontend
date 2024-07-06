@@ -7,23 +7,17 @@ import { Link, useParams } from 'react-router-dom';
 import BackBtnNavbar from '../components/layout/BackBtnNavbar';
 import { IoAdd } from 'react-icons/io5';
 
-const Achievement = [
-  {
-    id: 1,
-    name: 'Achievement 1',
-    icon: 'https://via.placeholder.com/50',
-  },
-  {
-    id: 2,
-    name: 'Achievement 2',
-    icon: 'https://via.placeholder.com/50',
-  },
-  {
-    id: 3,
-    name: 'Achievement 3',
-    icon: 'https://via.placeholder.com/50',
-  },
-];
+
+const achievementImagesAndName = [
+    { achievementName: "First Streak", image: "/icon/first-streak.svg" },
+    { achievementName: "Week Streak", image: "/icon/week-streak.svg" },
+    { achievementName: "Month Streak", image: "/icon/month-streak.svg" },
+    { achievementName: "100 Days Streak", image: "/icon/100-days-streak.svg" },
+    { achievementName: "Streak Master", image: "/icon/streak-master.png" },
+    { achievementName: "Collaborator", image: "/icon/collaborator.svg" },
+    { achievementName: "Note Creator", image: "/icon/notes-creator.svg" },
+    { achievementName: "Note Master", image: "/icon/notes-master.png" }
+  ];
 
 
 const UserProfile = () => {
@@ -94,18 +88,25 @@ const UserProfile = () => {
     fetchSuggestionsFriends();
   }, []);
 
+  const unlockedAchievements = profileData.achievements || [];
+  const achievements = achievementImagesAndName.map((achievement) => ({
+    ...achievement,
+    unlocked: unlockedAchievements.includes(achievement.achievementName),
+  }));
+
   if (!profileData) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="min-h-screen mt-[60px] bg-gray-100 flex flex-col items-center pb-[50px]">
+    <div className="min-h-screen mt-[60px] bg-gray-100 flex flex-col items-center"
+    onLoad={()=> window.scroll(0 , 0)}>
         <BackBtnNavbar text="Profile" />
       <div className=" w-full">
         <div className='absolute top-[60px] right-0 bg-gray-500 z-10 text-[10px] px-3 py-1 bg-gradient-to-r to-gray-100  from-transparent'>Joined 24-02-2024</div>
         <img src={bannerImage} alt="Banner" className="w-full h-[150px] object-cover" />
       </div>
-      <div className="w-full bg-white shadow-md rounded-lg  mb-6 px-4 pb-4">
+      <div className="w-full bg-white shadow-md rounded-lg  px-4 pb-8">
         <div className="flex gap-[20px] mb-4">
           <img src={profileImage} alt="Profile" className="w-[100px] h-[100px] rounded-full border-4 border-white -mt-7 object-cover" />
           <div className="mt-2">
@@ -136,38 +137,41 @@ const UserProfile = () => {
             </button>
         )}
             </div>
-        <div className="mb-6 flex bg-cyan-800 rounded-sm justify-around px-2 text-white py-4 text-center">
+       
+        <div className="mb-6 flex bg-white shadow-sm border  rounded-sm justify-around px-2 text-black py-4 text-center">
           <div className="flex flex-col gap-1 py-1 items-center justify-center ">
-            <div className='flex'>  <FaNotesMedical className="text-white mr-1 self-center" /> Notes</div>
+            <div className='flex'><FaNotesMedical className="text-gray-600 mr-1 self-center" /> Notes</div>
             <span>{profileData.totalNotes}</span>
           </div>
-          <div className='rounded-md bg-white w-[2px]'></div>
-          <div className="flex flex-col  gap-1 items-center justify-center">
-            <div className='flex'>  <FaStar className="text-white mr-1 self-center" /> Streak</div>
-            <span> {profileData.streaks && profileData.streaks.length}</span>
+          <div className='rounded-md bg-gray-300 w-[2px]'></div>
+          <div className="flex flex-col gap-1 items-center justify-center">
+            <div className='flex'><FaStar className="text-gray-600 mr-1 self-center" /> Streak</div>
+            <span>{profileData.streaks && profileData.streaks.length}</span>
           </div>
-          <div className='rounded-md bg-white w-[2px]'></div>
-          <div className="flex flex-col  gap-1 items-center justify-center">
-            <div className='flex'>  <FaTrophy className="text-white mr-1 self-center" /> Score</div>
+          <div className='rounded-md bg-gray-300 w-[2px]'></div>
+          <div className="flex flex-col gap-1 items-center justify-center">
+            <div className='flex'><FaTrophy className="text-gray-600 mr-1 self-center" /> Score</div>
             <span>{profileData.score}</span>
           </div>
         </div>
         <div className="mb-6">
           <h2 className="text-xl font-semibold mb-2">Achievements</h2>
           <div className="overflow-x-auto whitespace-nowrap no-scrollbar">
-            {Achievement.map((achievement) => (
-              <div key={achievement.id} className="inline-block p-2">
-                <div className="bg-gray-200 rounded-lg p-4">
-                  <FaTrophy className="text-purple-500 mb-2" />
-                  <p>{achievement.name}</p>
-                </div>
+            {achievements.map((achievement, index) => (
+              <div key={index} className="inline-block p-2">
+              <div className={`rounded-lg shadow p-4 ${achievement.unlocked ? 'bg-gray-200' : 'bg-gray-100'}`} style={{ filter: achievement.unlocked ? 'none' : 'grayscale(100%)' }}>
+                <img src={achievement.image} alt={achievement.achievementName} className="mb-2 h-[80px]" />
+                <p className='text-[13px] text-center'>{achievement.achievementName}</p>
               </div>
+            </div>
             ))}
           </div>
         </div>
         <div>
+        </div>
+        <div>
           <h2 className="text-xl font-semibold mb-2">Suggested Friends</h2>
-          <div className="overflow-x-auto whitespace-nowrap no-scrollbar">
+          <div className="overflow-x-auto p-1 whitespace-nowrap no-scrollbar">
             {suggestionsFriends.map((friend) => {
 
                 if(friend._id === localStorage.getItem('uid')){
@@ -175,7 +179,7 @@ const UserProfile = () => {
                 }
                 
                 return(
-              <div key={friend._id} className=" rounded-lg inline-block w-[136px] mr-3 py-4 bg-gray-200">
+              <div key={friend._id} className=" rounded-lg inline-block w-[136px] mr-3 py-4 bg-gray-100 shadow">
                 <div className="flex flex-col items-center justify-center text-center">
                   <img src={"/profile-logo.jpg"} alt="Friend" className="w-12 h-12 rounded-full self-center border border-white object-cover" />
                   <div>

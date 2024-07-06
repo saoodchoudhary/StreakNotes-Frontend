@@ -46,7 +46,7 @@ const RecievedNotes = () => {
             const truncatedContent = note.content ? truncate(note.content, 30) : '';
           return (
           
-          <div  key={note._id}>
+          <div   key={note._id}>
           <div onClick={()=>{handleRecievedNotesDetails(note)}} className="border bg-white border-gray-200 p-4 rounded-md mb-4 cursor-pointer">
             <h2 className="text-lg font-bold">{note.title}</h2>
             <p className="text-sm text-gray-500">By {note.owner.username} on {note.dateId}</p>

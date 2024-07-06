@@ -38,7 +38,7 @@ const NotesList = () => {
     }
 
     return (
-        <div className='pb-[60px] min-h-screen bg-white'>
+        <div className='pb-[60px] min-h-screen bg-white slide-in-up '>
             <div className='grid grid-cols-2 gap-3 px-4 py-2'>
                 {notesList.map((note, _) => {
                     

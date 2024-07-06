@@ -87,18 +87,20 @@ const FriendsPage = () => {
         <h2 className="text-lg font-semibold mb-2">Search Results</h2>
         {users.map((user) => (
           <Link to={`/user/profile/${user._id}`} key={user._id} className="flex items-center p-2 border rounded-lg shadow-sm mb-2">
-            <img src={user.profilePicture || '/profile-logo.jpg'} alt={user.fullName} className="w-10 h-10 rounded-full mr-4 object-cover" />
-            <div className="flex-1">
-              <p className="font-medium">{user.fullName}</p>
-              <p className="text-sm text-gray-500">{user.mutualFriends} mutual friends</p>
-            </div>
-            <button
-              onClick={() => handleFollow(user._id)}
-              className="p-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors"
-            >
-                {isFollowStatus[user._id] ? 'Followed' : 'Follow'}
-            </button>
-          </Link>
+          <div className="flex-1 flex">
+          <img src={user.profilePicture || '/profile-logo.jpg'} alt={user.fullName} className="w-10 h-10 rounded-full mr-4 object-cover" />
+          <div className="">
+            <p className="font-medium text-[16px]">{user.fullName}</p>
+            <p className="text-[12px] text-gray-500">@{user.username}</p>
+          </div>
+          </div>
+          <button
+            onClick={() => handleFollow(user._id)}
+            className="p-1 px-4 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors text-sm"
+          >
+              {isFollowStatus[user._id] ? 'Followed' : 'Follow'}
+          </button>
+        </Link>
         ))}
       </div>
       </div>
