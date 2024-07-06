@@ -125,7 +125,7 @@ const Profile = () => {
             {suggestionsFriends.map((friend) => (
               <div key={friend._id} className=" rounded-lg inline-block w-[136px] mr-3 py-4 bg-gray-200">
                 <div className="flex flex-col items-center justify-center text-center">
-                  <img src={friend.image} alt="Friend" className="w-12 h-12 rounded-full self-center border border-white object-cover" />
+                  <img src={"/profile-logo.jpg"} alt="Friend" className="w-12 h-12 rounded-full self-center border border-white object-cover" />
                   <div>
                     <p className="font-semibold mt-1 text-[14px]">{friend.fullName}</p>
                     <p className="text-gray-600 text-[12px]">@{friend.username}</p>
