@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BiSearch } from 'react-icons/bi';
+import { Link } from 'react-router-dom';
 
 const FriendsPage = () => {
   const [users, setUsers] = useState([]);
@@ -15,7 +16,6 @@ const FriendsPage = () => {
     const fetchSuggestedUsers = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/someUser/${localStorage.getItem('uid')}`);
-        console.log('response', response.data);
         setSuggestedUsers(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -66,7 +66,7 @@ const FriendsPage = () => {
       <div className="  mb-6">
         <h2 className="text-lg font-semibold mb-2">Suggested Users</h2>
         { suggestedUsers && suggestedUsers.map((user) => (
-          <div key={user._id} className="flex items-center p-2 border rounded-lg shadow-sm mb-2">
+          <Link to={`/user/profile/${user._id}`} key={user._id} className="flex items-center p-2 border rounded-lg shadow-sm mb-2">
             <div className="flex-1 flex">
             <img src={user.profilePicture || '/profile-logo.jpg'} alt={user.fullName} className="w-10 h-10 rounded-full mr-4 object-cover" />
             <div className="">
@@ -80,13 +80,13 @@ const FriendsPage = () => {
             >
                 {isFollowStatus[user._id] ? 'Followed' : 'Follow'}
             </button>
-          </div>
+          </Link>
         ))}
       </div>
       <div className={`${(searchTerm !== "" ? " block " : " hidden ")} absolute top-0 h-full w-full z-10 bg-white`}>
         <h2 className="text-lg font-semibold mb-2">Search Results</h2>
         {users.map((user) => (
-          <div key={user._id} className="flex items-center p-2 border rounded-lg shadow-sm mb-2">
+          <Link to={`/user/profile/${user._id}`} key={user._id} className="flex items-center p-2 border rounded-lg shadow-sm mb-2">
             <img src={user.profilePicture || '/profile-logo.jpg'} alt={user.fullName} className="w-10 h-10 rounded-full mr-4 object-cover" />
             <div className="flex-1">
               <p className="font-medium">{user.fullName}</p>
@@ -98,7 +98,7 @@ const FriendsPage = () => {
             >
                 {isFollowStatus[user._id] ? 'Followed' : 'Follow'}
             </button>
-          </div>
+          </Link>
         ))}
       </div>
       </div>

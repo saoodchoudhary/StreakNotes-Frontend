@@ -14,6 +14,8 @@ import NotesList from './page/NotesList';
 import FriendsPage from './page/FriendsPage';
 import { RecievedNotesDetailsProvider } from './context/RecievedNotesDetailsContext';
 import FollowerFollowingPage from './page/FollowerFollowingPage';
+import UserProfile from './page/UserProfile';
+import ViewUpdateNotes from './page/ViewUpdateNotes';
 
 function App() {
   return (
@@ -29,8 +31,10 @@ function App() {
             <Route path="profile/:id" element={<ProtectedRoute element={Profile} />} />
           </Route>
           <Route path="addNotes/:id" element={<ProtectedRoute element={AddNotes} />} />
+          <Route path="updateNotes/:noteId" element={<ProtectedRoute element={ViewUpdateNotes} />} />
           <Route path="register" element={<Register />} />
           <Route path="profile/follower-following/:which/:id" element={<FollowerFollowingPage />} />
+          <Route path="user/profile/:id" element={<UserProfile />} />
           <Route path="login" element={<Login />} />
           <Route path="recieved-notes" element={<ProtectedRoute element={RecievedNotes} />} />
         </Routes>

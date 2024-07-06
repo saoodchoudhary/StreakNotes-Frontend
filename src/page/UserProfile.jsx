@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { FaUserFriends, FaNotesMedical, FaUser, FaStar, FaTrophy } from 'react-icons/fa';
 import 'tailwindcss/tailwind.css';
 import useFetchProfile from '../hooks/useFetchProfile';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import BackBtnNavbar from '../components/layout/BackBtnNavbar';
+import { IoAdd } from 'react-icons/io5';
 
 const Achievement = [
   {
@@ -23,13 +25,20 @@ const Achievement = [
   },
 ];
 
-const Profile = () => {
+
+const UserProfile = () => {
+    const {id} = useParams();
   const profileImage = '/profile-logo.jpg';
   const bannerImage = '/profile-banner.jpg';
   const [suggestionsFriends, setSuggestionsFriends] = useState([]);
-  const { profileData, loading, error } = useFetchProfile();
+
+
   const [followButtonLoadingByUserId, setFollowButtonLoadingByUserId] = useState([]);
   const [followedUsers, setFollowedUsers] = useState([]);
+    const [profileData, setProfileData] = useState({});
+    const [isFollowStatus, setIsFollowStatus] = useState(false);
+
+    
 
   console.log(profileData);
 
@@ -43,12 +52,35 @@ const Profile = () => {
       });
       setFollowButtonLoadingByUserId((prev) => prev.filter((id) => id !== followUserId));
       setFollowedUsers((prev) => [...prev, followUserId]);
-      console.log(response.data);
     } catch (err) {
       setFollowButtonLoadingByUserId((prev) => prev.filter((id) => id !== followUserId));
       console.error(err);
     }
   };
+
+    useEffect(() => {
+        const fetchProfileData = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/profile/${id}`);
+                setProfileData(response.data);
+                if(response.data.followers === 0){
+                    setIsFollowStatus(false);
+                }else{
+
+                if(response.data.followers.includes(localStorage.getItem('uid'))){
+                    setIsFollowStatus(true);    
+                }else{
+                    setIsFollowStatus(false);
+                }
+            }
+
+
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchProfileData();
+    }, [id]);
 
   useEffect(() => {
     const fetchSuggestionsFriends = async () => {
@@ -67,7 +99,8 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center pb-[50px]">
+    <div className="min-h-screen mt-[60px] bg-gray-100 flex flex-col items-center pb-[50px]">
+        <BackBtnNavbar text="Profile" />
       <div className=" w-full">
         <div className='absolute top-[60px] right-0 bg-gray-500 z-10 text-[10px] px-3 py-1 bg-gradient-to-r to-gray-100  from-transparent'>Joined 24-02-2024</div>
         <img src={bannerImage} alt="Banner" className="w-full h-[150px] object-cover" />
@@ -82,15 +115,27 @@ const Profile = () => {
         </div>
         
         <div className="flex justify-around items-center mb-8">
-          <Link to={`/profile/follower-following/followers/${localStorage.getItem("uid")}`} className="flex items-center">
+          <Link to={`/profile/follower-following/followers/${id}`} className="flex items-center">
             <FaUserFriends className="text-green-500 mr-2" />
-            <span>Followers {profileData.followers.length}</span>
+            <span>Followers { profileData.followers && profileData.followers.length }</span>
           </Link>
-          <Link to={`/profile/follower-following/following/${localStorage.getItem("uid")}`} className="flex items-center">
+          <Link to={`/profile/follower-following/following/${id}`} className="flex items-center">
             <FaUser className="text-yellow-500 mr-2" />
-            <span>Following {profileData.following.length}</span>
+            <span>Following {profileData.following && profileData.following.length }</span>
           </Link>
         </div>
+        {/* follow button */}
+        <div className="mb-6">
+        {isFollowStatus ? (
+            <button onClick={()=> handleFollowUser(id)} className="bg-blue-500 text-white px-4 py-2 rounded-full w-full flex justify-center">
+                Followed
+            </button>
+        ) : (
+            <button onClick={()=> handleFollowUser(id)} className="bg-blue-500 text-white px-4 py-2 rounded-full w-full flex justify-center">
+                Follow
+            </button>
+        )}
+            </div>
         <div className="mb-6 flex bg-cyan-800 rounded-sm justify-around px-2 text-white py-4 text-center">
           <div className="flex flex-col gap-1 py-1 items-center justify-center ">
             <div className='flex'>  <FaNotesMedical className="text-white mr-1 self-center" /> Notes</div>
@@ -99,7 +144,7 @@ const Profile = () => {
           <div className='rounded-md bg-white w-[2px]'></div>
           <div className="flex flex-col  gap-1 items-center justify-center">
             <div className='flex'>  <FaStar className="text-white mr-1 self-center" /> Streak</div>
-            <span> {profileData.streaks.length}</span>
+            <span> {profileData.streaks && profileData.streaks.length}</span>
           </div>
           <div className='rounded-md bg-white w-[2px]'></div>
           <div className="flex flex-col  gap-1 items-center justify-center">
@@ -123,8 +168,14 @@ const Profile = () => {
         <div>
           <h2 className="text-xl font-semibold mb-2">Suggested Friends</h2>
           <div className="overflow-x-auto whitespace-nowrap no-scrollbar">
-            {suggestionsFriends.map((friend) => (
-              <Link to={`/user/profile/${friend._id}`} key={friend._id} className=" rounded-lg inline-block w-[136px] mr-3 py-4 bg-gray-200">
+            {suggestionsFriends.map((friend) => {
+
+                if(friend._id === localStorage.getItem('uid')){
+                    return null;
+                }
+                
+                return(
+              <div key={friend._id} className=" rounded-lg inline-block w-[136px] mr-3 py-4 bg-gray-200">
                 <div className="flex flex-col items-center justify-center text-center">
                   <img src={"/profile-logo.jpg"} alt="Friend" className="w-12 h-12 rounded-full self-center border border-white object-cover" />
                   <div>
@@ -147,8 +198,8 @@ const Profile = () => {
                     </button>
                   )}
                 </div>
-              </Link>
-            ))}
+              </div>
+            )})}
           </div>
         </div>
       </div>
@@ -156,4 +207,5 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+
+export default UserProfile
