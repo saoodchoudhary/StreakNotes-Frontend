@@ -20,7 +20,7 @@ const Profile = () => {
   const profileImage = '/profile-logo.jpg';
   const bannerImage = '/profile-banner.jpg';
   const [suggestionsFriends, setSuggestionsFriends] = useState([]);
-  const { profileData, loading, error } = useFetchProfile();
+  const { streak,profileData, loading, error } = useFetchProfile();
   const [followButtonLoadingByUserId, setFollowButtonLoadingByUserId] = useState([]);
   const [followedUsers, setFollowedUsers] = useState([]);
 
@@ -77,22 +77,22 @@ const Profile = () => {
         <div className="flex justify-around items-center mb-8">
           <Link to={`/profile/follower-following/followers/${localStorage.getItem("uid")}`} className="flex items-center">
             <FaUserFriends className="text-green-500 mr-2" />
-            <span>Followers {profileData.followers.length}</span>
+            <span>Followers {profileData.followers && profileData.followers.length}</span>
           </Link>
           <Link to={`/profile/follower-following/following/${localStorage.getItem("uid")}`} className="flex items-center">
             <FaUser className="text-yellow-500 mr-2" />
-            <span>Following {profileData.following.length}</span>
+            <span>Following {profileData.following && profileData.following.length}</span>
           </Link>
         </div>
         <div className="mb-6 flex bg-white shadow-sm border  rounded-sm justify-around px-2 text-black py-4 text-center">
           <div className="flex flex-col gap-1 py-1 items-center justify-center ">
             <div className='flex'><FaNotesMedical className="text-gray-600 mr-1 self-center" /> Notes</div>
-            <span>{profileData.totalNotes}</span>
+            <span>{profileData.notes && profileData.notes.length}</span>
           </div>
           <div className='rounded-md bg-gray-300 w-[2px]'></div>
           <div className="flex flex-col gap-1 items-center justify-center">
             <div className='flex'><FaStar className="text-gray-600 mr-1 self-center" /> Streak</div>
-            <span>{profileData.streaks.length}</span>
+            <span>{ streak}</span>
           </div>
           <div className='rounded-md bg-gray-300 w-[2px]'></div>
           <div className="flex flex-col gap-1 items-center justify-center">

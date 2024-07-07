@@ -19,6 +19,7 @@ const useFetchProfile = () => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [streak , setStreak] = useState(0);
 
   
 
@@ -28,6 +29,7 @@ const useFetchProfile = () => {
         const uid = localStorage.getItem('uid');
         const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/profile/${uid}`);
         const data = response.data;
+        setStreak(response.data.streaks[0].streakCount);
         setProfileData(data);
       } catch (err) {
         setError(err);
@@ -38,7 +40,7 @@ const useFetchProfile = () => {
     fetchProfileData();
   }, []);
 
-  return { profileData, loading, error };
+  return {streak, profileData, loading, error };
 };
 
 export default useFetchProfile;

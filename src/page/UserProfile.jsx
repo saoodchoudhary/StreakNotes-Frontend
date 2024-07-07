@@ -31,6 +31,7 @@ const UserProfile = () => {
   const [followedUsers, setFollowedUsers] = useState([]);
     const [profileData, setProfileData] = useState({});
     const [isFollowStatus, setIsFollowStatus] = useState(false);
+    const [streak , setStreak] = useState(0);
 
     
 
@@ -56,11 +57,12 @@ const UserProfile = () => {
         const fetchProfileData = async () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/profile/${id}`);
+                console.log( "user data", response.data)
                 setProfileData(response.data);
+                setStreak(response.data.streaks[0].streakCount);
                 if(response.data.followers === 0){
                     setIsFollowStatus(false);
                 }else{
-
                 if(response.data.followers.includes(localStorage.getItem('uid'))){
                     setIsFollowStatus(true);    
                 }else{
@@ -141,12 +143,12 @@ const UserProfile = () => {
         <div className="mb-6 flex bg-white shadow-sm border  rounded-sm justify-around px-2 text-black py-4 text-center">
           <div className="flex flex-col gap-1 py-1 items-center justify-center ">
             <div className='flex'><FaNotesMedical className="text-gray-600 mr-1 self-center" /> Notes</div>
-            <span>{profileData.totalNotes}</span>
+            <span>{profileData.notes && profileData.notes.length}</span>
           </div>
           <div className='rounded-md bg-gray-300 w-[2px]'></div>
           <div className="flex flex-col gap-1 items-center justify-center">
             <div className='flex'><FaStar className="text-gray-600 mr-1 self-center" /> Streak</div>
-            <span>{profileData.streaks && profileData.streaks.length}</span>
+            <span>{ streak}</span>
           </div>
           <div className='rounded-md bg-gray-300 w-[2px]'></div>
           <div className="flex flex-col gap-1 items-center justify-center">
