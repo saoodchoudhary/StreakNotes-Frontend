@@ -37,20 +37,25 @@ const NotesList = () => {
     if (isLoading) {
         return <div>Loading...</div>
     }
+      // Array of background colors
+      const backgroundColors = [
+        'bg-blue-50', 'bg-green-50', 'bg-red-50', 'bg-yellow-50', 'bg-indigo-50', 'bg-pink-50', 'bg-purple-50', 'bg-gray-50'
+    ];
 
     return (
-        <div className='pb-[60px] min-h-screen mt-[60px] bg-white slide-in-up '>
-            <BackBtnNavbar text='Notes List' />
-            <div className='grid grid-cols-2 gap-3 px-4 py-2'>
+        <div className='pb-[60px] min-h-screen bg-white slide-in-up mt-[60px]'>
+            <BackBtnNavbar text='Notes' />
+           {notesList &&<div className='grid grid-cols-2 gap-3 px-4 py-2'>
                 {notesList.map((note, _) => {
                     
                   const date =  findIndexOfMonth(note.dateId)
                     // Truncate the HTML content to the first 50 characters
-                    const truncatedContent = note.content ? truncate(note.content, 30) : '';
+                    const truncatedContent = note.content ? truncate(note.content, 40) : '';
+                    const color = backgroundColors[_ % backgroundColors.length]
 
                     return (
                         <Link to={`/updateNotes/${note._id}`} key={_} >
-                            <div className='border relative bg-white rounded-md h-[200px] p-2'>
+                            <div className={`border relative ${color} rounded-md h-[200px] p-2`}>
                                 <h2>{note.title}</h2>
                                 <div dangerouslySetInnerHTML={{ __html: truncatedContent }}></div>
                                 <p className='absolute z-20 bottom-0 right-0 px-2 bg-orange-600 text-white text-[10px] rounded-tl-md font-medium rounded-br-md'>{date}</p>
@@ -59,7 +64,8 @@ const NotesList = () => {
                         </Link>
                     )
                 })}
-            </div>
+            </div> } 
+            {notesList.length === 0 && <div className="text-center flex justify-center h-screen align-middle -mt-[60px]"><div className=' self-center'>No notes Found</div></div>}
         </div>
     )
 }

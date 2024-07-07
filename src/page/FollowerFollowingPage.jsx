@@ -2,17 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import BackBtnNavbar from '../components/layout/BackBtnNavbar';
-// const followers = [
-//     { id: 1, name: 'John Doe', profileImage: 'https://via.placeholder.com/150' },
-//     { id: 2, name: 'Jane Smith', profileImage: 'https://via.placeholder.com/150' },
-//     // Add more followers
-// ];
 
-// const following = [
-//     { id: 3, name: 'Emily Johnson', profileImage: 'https://via.placeholder.com/150' },
-//     { id: 4, name: 'Michael Brown', profileImage: 'https://via.placeholder.com/150' },
-//     // Add more following
-// ];
 const FollowerFollowingPage = () => {
     const { which, id } = useParams();
     const whichTab = which || 'followers';
@@ -36,10 +26,10 @@ const FollowerFollowingPage = () => {
     , []);
 
     return (
-        <div className="flex flex-col items-center bg-gray-100 min-h-screen p-4"
+        <div className="flex flex-col items-center bg-gray-50 min-h-screen "
         onLoad={()=> window.scroll(0 , 0)}>
             <BackBtnNavbar text={activeTab === 'followers' ? 'Followers' : 'Following'} />
-            <div className="w-full max-w-md bg-white mt-[60px] rounded-lg shadow-md overflow-hidden">
+            <div className="w-full max-w-md bg-white mt-[60px] rounded-lg shadow-md px-4 min-h-screen overflow-hidden">
                 <div className="flex justify-around border-b">
                     <button
                         className={`w-1/2 p-4 text-center ${
@@ -62,21 +52,23 @@ const FollowerFollowingPage = () => {
                 <div className="py-4 px-2">
                     {activeTab === 'followers' ? (
                         <div>
-                            {followers.map((follower) => (
+                            {followers && followers.map((follower) => (
                                 <Link to={`/user/profile/${follower._id}`} key={follower._id} className="flex items-center py-2 border-b px-1">
                                     <img src={"/profile-logo.jpg"} alt={follower.fullName} className="w-10 h-10 rounded-full mr-3 object-cover" />
                                     <span>{follower.fullName}</span>
                                 </Link>
                             ))}
+                            {followers.length === 0 && <p className="text-center py-2">No followers yet</p>}
                         </div>
                     ) : (
                         <div>
-                            {following.map((followed) => (
+                            {following && following.map((followed) => (
                                 <Link to={`/user/profile/${followed._id}`} key={followed._id} className="flex items-center py-2 border-b">
                                     <img src={"/profile-logo.jpg"} alt={followed.fullName} className="w-10 h-10 rounded-full mr-3 object-cover" />
                                     <span>{followed.fullName}</span>
                                 </Link>
                             ))}
+                            {following.length === 0 && <p className="text-center py-2">No following yet</p>}
                         </div>
                     )}
                 </div>
