@@ -3,6 +3,7 @@ import { addMonths, format, startOfMonth, endOfMonth, eachDayOfInterval, subMont
 import { Box } from '@mui/material';
 import '../styles/Calendar.css';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const StreakCalendar = () => {
   const initialYear = 2024;
@@ -77,13 +78,16 @@ const StreakCalendar = () => {
             <div className="days-grid">
               {emptyDays}
               {daysInMonth.map((day, _) => (
-                <Box
+               <Link 
+               key={"i"+_}
+               to={`/notes/list/${format(day, 'yyyy-MM-dd')}`}> 
+               <Box
                   id={format(day, 'yyyy-MM-dd')}
-                  key={"i"+_}
                   className={`day-box ${streakDates.includes(format(day, 'yyyy-MM-dd')) ? 'streak' : ''}`}
                 >
                   {format(day, 'd')}
                 </Box>
+                </Link>
               ))}
             </div>
           </Box>

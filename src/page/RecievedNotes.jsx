@@ -33,13 +33,13 @@ const RecievedNotes = () => {
     fetchRecievedNotes();
   }, []);
 
-  // if (recievedNotes.length === 0) {
-  //   return <p>Loading...</p>;
-  // }
+  if (recievedNotes.length === 0) {
+    return <p>Loading...</p>;
+  }
   return (
     <div className="slide-in-right">
       <BackBtnNavbar text="Recieved Notes" />
-      <div className='mt-[70px] px-3'>
+      <div className='mt-[60px] px-3 bg-white min-h-screen'>
       <div>
         {recievedNotes.length !== 0  &&    recievedNotes.recievedNotes.map((note) => {
             // Truncate the HTML content to the first 50 characters
@@ -54,6 +54,7 @@ const RecievedNotes = () => {
           </div>
           </div>
         )})}
+        {recievedNotes.recievedNotes.length === 0 && <div className="text-center mt-4">No notes recieved yet</div>}
       </div>  </div>
      {openDetails && <DetailsRecievedNotes onClose={()=>{setOpenDetails(false)}}/> }
     </div>

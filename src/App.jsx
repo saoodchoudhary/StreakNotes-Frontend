@@ -26,10 +26,10 @@ function App() {
           <Route path="/" element={<Home />}>
             <Route index element={<ProtectedRoute element={HomePage} />} />
             <Route path="calendar/:id" element={<ProtectedRoute element={StreakCalendar} />} />
-            <Route path="notes/list/:id" element={<ProtectedRoute element={NotesList} />} />
             <Route path="friends" element={<ProtectedRoute element={FriendsPage} />} />
             <Route path="profile/:id" element={<ProtectedRoute element={Profile} />} />
           </Route>
+            <Route path="notes/list/:id" element={<ProtectedRoute element={NotesList} />} />
           <Route path="addNotes/:id" element={<ProtectedRoute element={AddNotes} />} />
           <Route path="updateNotes/:noteId" element={<ProtectedRoute element={ViewUpdateNotes} />} />
           <Route path="register" element={<Register />} />

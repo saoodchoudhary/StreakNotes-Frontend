@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import truncate from 'html-truncate';
 import { findIndexOfMonth } from '../utils/findIndexOfMonth';
+import BackBtnNavbar from '../components/layout/BackBtnNavbar';
 
 const NotesList = () => {
     const params = useParams();
@@ -38,7 +39,8 @@ const NotesList = () => {
     }
 
     return (
-        <div className='pb-[60px] min-h-screen bg-white slide-in-up '>
+        <div className='pb-[60px] min-h-screen mt-[60px] bg-white slide-in-up '>
+            <BackBtnNavbar text='Notes List' />
             <div className='grid grid-cols-2 gap-3 px-4 py-2'>
                 {notesList.map((note, _) => {
                     

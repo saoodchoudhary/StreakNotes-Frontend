@@ -42,7 +42,7 @@ const WeekMonth = () => {
 
                     return (
                         <Link
-                            to={`notes/list/${format(day, 'yyyy-MM-dd')}`}
+                            to={`/notes/list/${format(day, 'yyyy-MM-dd')}`}
                             key={index}
                             className={`bg-white py-5 px-[25px] my-[10px] block mx-[5px] border ${linkClass}`}
                             {...linkProps}

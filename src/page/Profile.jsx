@@ -104,9 +104,9 @@ const Profile = () => {
           <h2 className="text-xl font-semibold mb-2">Achievements</h2>
           <div className="overflow-x-auto whitespace-nowrap no-scrollbar">
             {achievements.map((achievement, index) => (
-              <div key={index} className="inline-block p-2">
-                <div className={`rounded-lg shadow p-4 ${achievement.unlocked ? 'bg-gray-200' : 'bg-gray-100'}`} style={{ filter: achievement.unlocked ? 'none' : 'grayscale(100%)' }}>
-                  <img src={achievement.image} alt={achievement.achievementName} className="mb-2 h-[80px]" />
+              <div key={index} className="inline-flex justify-center p-2">
+                <div className={`flex justify-center flex-col rounded-lg shadow p-4 ${achievement.unlocked ? 'bg-gray-200' : 'bg-gray-100'}`} style={{ filter: achievement.unlocked ? 'none' : 'grayscale(100%)' }}>
+                  <img src={achievement.image} alt={achievement.achievementName} className="mb-2 self-center h-[80px]" />
                   <p className='text-[13px] text-center'>{achievement.achievementName}</p>
                 </div>
               </div>
