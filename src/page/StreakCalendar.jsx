@@ -35,7 +35,7 @@ const StreakCalendar = () => {
     };
   }, []);
 
-  const [streakDates, setStreakDates] = useState(['2024-07-10']);
+  const [streakDates, setStreakDates] = useState([]);
   const [streakRestoreDates, setStreakRestoreDates] = useState([]);
 
 
@@ -58,7 +58,7 @@ const StreakCalendar = () => {
   }, []);
 
   // const streakDates = ['2024-07-10', '2024-07-15']; // Example streak dates
-  const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
   return (
     <div className="calendar-container bg-white pb-[50px]" ref={scrollRef} style={{ overflowY: 'auto', height: '100vh' }}>
@@ -68,11 +68,11 @@ const StreakCalendar = () => {
         const emptyDays = Array.from({ length: startDay }, (_, i) => <Box key={`empty-${i}`} className="day-box empty"></Box>);
 
         return (
-          <Box key={index} className="month-box">
+          <div key={index} className="month-box">
             <h2 className="month-title">{format(month, 'MMMM yyyy')}</h2>
             <div className="days-of-week">
               {daysOfWeek.map((day,_) => (
-                <Box key={_} className="day-header">{day}</Box>
+                <div key={_} className="day-header">{day}</div>
               ))}
             </div>
             <div className="days-grid">
@@ -80,17 +80,19 @@ const StreakCalendar = () => {
               {daysInMonth.map((day, _) => (
                <Link 
                key={"i"+_}
-               to={`/notes/list/${format(day, 'yyyy-MM-dd')}`}> 
-               <Box
+               to={`/notes/list/${format(day, 'yyyy-MM-dd')}`}
+               className='link-box'> 
+               
+               <div
                   id={format(day, 'yyyy-MM-dd')}
-                  className={`day-box ${streakDates.includes(format(day, 'yyyy-MM-dd')) ? 'streak' : ''}`}
+                  className={`day-box ${streakRestoreDates.includes(format(day, 'yyyy-MM-dd')) ? 'restore-streak' : ''} ${streakDates.includes(format(day, 'yyyy-MM-dd')) ? 'streak' : ''}  `}
                 >
                   {format(day, 'd')}
-                </Box>
+                </div>
                 </Link>
               ))}
             </div>
-          </Box>
+          </div>
         );
       })}
     </div>
