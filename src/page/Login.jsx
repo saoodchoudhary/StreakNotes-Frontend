@@ -36,8 +36,8 @@ const Login = () => {
   return (
     <>
       <BackBtnNavbar text="Login" />
-      <div className="flex items-center justify-center mt-[60px]">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+      <div className="flex bg-white w-full items-center justify-center min-h-screen">
+        <div className="p-8 rounded-lg border w-96">
           <h2 className="text-2xl font-bold text-center mb-8">Sign in your Account</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">

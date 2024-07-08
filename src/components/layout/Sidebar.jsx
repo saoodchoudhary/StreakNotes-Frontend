@@ -1,10 +1,22 @@
 // src/components/Sidebar.js
-import React from 'react';
+import React, { useContext } from 'react';
 import { FaTimes, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { IoPerson } from 'react-icons/io5';
 import useFetchProfile from '../../hooks/useFetchProfile';
+import { AuthContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ isOpen, onClose }) => {
+  const {logout} = useContext(AuthContext)
+
+  const navigate = useNavigate();
+
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  }
+
 
  const {profileData, loading, error}= useFetchProfile();
   if (loading) return <p>Loading...</p>;
@@ -24,7 +36,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             <FaTimes className="text-gray-700" />
           </button>
         </div>
-        <div className="p-4">
+        <div className="py-4">
           <ul className='space-y-1'>
             <li className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
               <IoPerson className="mr-2 text-gray-600" />
@@ -49,7 +61,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </ul>
         </div>
         
-        <div className="flex fixed bottom-6 left-4 items-center p-2 hover:bg-gray-100 text-red-600 cursor-pointer">
+        <div className="flex fixed bottom-6 left-4 items-center p-2 hover:bg-gray-100 text-red-600 cursor-pointer" onClick={()=>handleLogout()}>
               <FaSignOutAlt className="mr-2 text-red-600" />
               <span>Logout</span>
             </div>

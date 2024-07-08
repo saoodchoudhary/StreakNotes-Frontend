@@ -34,8 +34,8 @@ const Register = () => {
   return (
     <>
       <BackBtnNavbar text="Register" />
-    <div className="flex items-center justify-center mt-[60px] ">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+    <div className="flex items-center justify-center bg-white min-h-screen ">
+      <div className=" p-8 rounded-lg border w-96">
         <h2 className="text-2xl font-bold text-center mb-8">Create your Account</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
