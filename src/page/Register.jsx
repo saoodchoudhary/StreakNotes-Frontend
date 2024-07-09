@@ -1,15 +1,18 @@
 // src/components/Register.js
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaUserAlt, FaEnvelope, FaLock } from 'react-icons/fa';
 import BackBtnNavbar from '../components/layout/BackBtnNavbar';
 import { submitFormData } from '../hooks/api';
 import useForm from '../hooks/useForm';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import OtpPage from './OtpPage';
+import { validations } from '../utils/validations';
 
 const Register = () => {
  const navigate =  useNavigate();
  const {setToken} = useContext(AuthContext);
+ const [openOtp, setOpenOtp] = useState(false);
 
   const initialValues = {
     fullName: '',
@@ -17,19 +20,67 @@ const Register = () => {
     password: '',
     confirmPassword: '',
   }
+  const [values, setValues] = useState(initialValues);
+  const [errors, setErrors] = useState({});
+
 
   const submitCallback = async() => {  
-    try{
-      const response = await submitFormData(values, "register")
-      console.log(response)
-      // localStorage.setItem('token', response.token);
-      setToken(response.token, response.uid)
-      navigate('/')
-    }catch(error){
-      console.log(error)
-    }
+    try {
+      const response = await fetch(import.meta.env.VITE_API_URI+'/user/otp-register', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({email: values.email}),
+      });
+      const data = await response.json();
+
+
+      if (!response.ok) {
+      // set Errors
+      if (data.message) {
+          setErrors({ email: data.message });
+          return;
+      }
+          const message = `An error occurred: ${response.status}`;
+          throw new Error(message);
+      }
+
+      console.log(data)
+      setOpenOtp(true)
+
+
+  } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+      throw error;
   }
-  const {errors, values, handleChange, handleSubmit} = useForm( submitCallback, initialValues)
+    // try{
+    //   const response = await submitFormData(values, "register")
+    //   console.log(response)
+    //   setOpenOtp(true)
+    // }catch(error){
+    //   console.log(error)
+    // }
+  }
+
+  const handleChange = (e) => {
+      const { name, value } = e.target;
+      setValues({
+          ...values,
+          [name]: value,
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("values", values);
+    const validationsError = validations(values);
+    setErrors(validationsError);
+    if (Object.keys(validationsError).length === 0) {
+        submitCallback();
+    }
+}
+  // const {  errors, values, handleChange, handleSubmit} = useForm( submitCallback, initialValues)
 
   return (
     <>
@@ -112,6 +163,7 @@ const Register = () => {
           </p>
         </form>
       </div>
+    {openOtp && <OtpPage data={values} onclose={()=>{setOpenOtp(false)}}/> } 
     </div></>
   );
 };

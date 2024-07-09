@@ -16,6 +16,7 @@ import { RecievedNotesDetailsProvider } from './context/RecievedNotesDetailsCont
 import FollowerFollowingPage from './page/FollowerFollowingPage';
 import UserProfile from './page/UserProfile';
 import ViewUpdateNotes from './page/ViewUpdateNotes';
+import OtpPage from './page/OtpPage';
 
 function App() {
   return (
