@@ -34,8 +34,9 @@ const WeekMonth = () => {
     const today = new Date();
     return (
         <div className=' bg-white  rounded-t-3xl mx-2 border  mt-2 mb-[50px] pb-[10px]'>
-            <div className='flex mt-6 mx-6 justify-between '>
+            <div className='flex mt-5 mx-6 justify-between items-center'>
                 <div className='text-md text-gray-700 font-medium'>Week 26</div>
+                <div className='text-md flex gap-1 justify-center items-center border border-orange-500 px-4 py-1 rounded-full text-orange-500 font-medium'>Restore <img src='/icon/streak-fire.svg' className=' w-[16px] h-[16px]' /></div>
                 <div className='text-md text-gray-700 font-medium'>June 2024</div>
 
             </div>
@@ -55,7 +56,7 @@ const WeekMonth = () => {
                         <Link
                             to={`/notes/list/${format(day, 'yyyy-MM-dd')}`}
                             key={index}
-                            className={`bg-white py-5 px-[25px] rounded-xl my-[10px] block mx-[5px] shadow-sm ${linkClass} ${weekDaysColor[index]}`}
+                            className={`bg-white py-5 px-[25px] rounded-xl my-[20px] block mx-[5px] shadow ${linkClass}`}
                             {...linkProps}
                         >
                             <div className='text-[18px] font-medium'>{format(day, 'E')}</div>
