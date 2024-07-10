@@ -9,14 +9,14 @@ const AddNotes = () => {
    const {id} = useParams();
    console.log(id);
   return (
-    <div>
+    <>
         {/* <NotesHeader/>
          */}
 
          <BackBtnNavbar text={'Add Notes'}/>
         {/* <NotesMainSection/> */}
         <AddNotesInput/>
-    </div>
+    </>
   )
 }
 
