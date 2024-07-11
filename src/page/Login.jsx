@@ -33,7 +33,7 @@ const Login = () => {
     <>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-teal-400 to-blue-500">
         <div className="flex flex-col items-center bg-white p-8 rounded-lg shadow-lg w-80 max-w-md transform transition duration-500 hover:scale-105">
-          <img src="/icon/login.svg" alt="login" className="w-24 h-24 mb-4" />
+          <img src="/icon/login.svg" alt="login" className="w-24 h-24 mb-4 animate-bounce" />
           <h2 className="text-2xl font-bold text-gray-700 mb-4">Welcome Back</h2>
           <form onSubmit={handleSubmit} className="w-full">
             <div className="mb-4">
