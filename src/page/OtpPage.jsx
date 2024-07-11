@@ -96,7 +96,7 @@ const OtpPage = ({ data, onclose }) => {
         </div>
       </div>
       <div className="flex justify-center items-center mt-[60px] h-[80%]">
-        <form className="bg-white p-8 rounded-lg shadow-lg w-80 max-w-md transform transition duration-500 hover:scale-105 animate-fadeIn">
+        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg w-80 max-w-md transform transition duration-500 hover:scale-105 animate-fadeIn">
           <div className="flex items-center justify-center">
             <img src="/icon/mail.png" alt="otp" className="w-24 h-24 my-6 animate-bounce" />
           </div>
@@ -113,7 +113,7 @@ const OtpPage = ({ data, onclose }) => {
             {otp.map((digit, index) => (
               <input
                 key={index}
-                type="text"
+                type="number"
                 maxLength="1"
                 value={digit}
                 onChange={(e) => handleOtpChange(e, index)}
