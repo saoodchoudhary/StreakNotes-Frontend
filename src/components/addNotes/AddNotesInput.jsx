@@ -88,7 +88,7 @@ const AddNotesInput = () => {
       const todayDate = new Date();
       const dateId = todayDate.toISOString().slice(0, 10);
 
-     axios.post('http://192.168.0.108:8000/api/notes/save-note', { noteId, dateId: dateId,    content: editorRef.current.innerHTML, uid: localStorage.getItem('uid')})
+     axios.post(import.meta.env.VITE_API_URI+'/notes/save-note', { noteId, dateId: dateId,    content: editorRef.current.innerHTML, uid: localStorage.getItem('uid')})
      .then((response) => { 
         console.log('response', response.data);
         setIsSaved(true);
