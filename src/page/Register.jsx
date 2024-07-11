@@ -4,7 +4,7 @@ import { FaUserAlt, FaEnvelope, FaLock } from 'react-icons/fa';
 import { FiUserPlus } from 'react-icons/fi';
 import useForm from '../hooks/useForm';
 import { submitFormData } from '../hooks/api';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import OtpPage from './OtpPage';
 import { validations } from '../utils/validations';
@@ -143,7 +143,7 @@ const Register = () => {
               </button>
             </div>
             <p className="text-center text-gray-500 text-xs">
-              I already have an account? <a href="/login" className="text-teal-700 hover:text-teal-700">Log In</a>
+              I already have an account? <Link href="/login" className="text-teal-700 hover:text-teal-700">Log In</Link>
             </p>
           </form>
         </div>

@@ -4,7 +4,7 @@ import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { FiLogIn } from 'react-icons/fi';
 import useForm from '../hooks/useForm';
 import { submitFormData } from '../hooks/api';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const Login = () => {
@@ -72,7 +72,7 @@ const Login = () => {
               </button>
             </div>
             <p className="text-center text-gray-500 text-xs mt-4">
-              Don’t have an account? <a href="/register" className="text-teal-700 hover:text-blue-700">Sign Up</a>
+              Don’t have an account? <Link to="/register" className="text-teal-700 hover:text-blue-700">Sign Up</Link>
             </p>
           </form>
         </div>
