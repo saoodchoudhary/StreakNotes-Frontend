@@ -4,6 +4,8 @@ import { FaUserFriends, FaNotesMedical, FaUser, FaStar, FaTrophy } from 'react-i
 import 'tailwindcss/tailwind.css';
 import useFetchProfile from '../hooks/useFetchProfile';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { CurrentUser, fetchSuggestionsFriends, fetchUsers } from '../redux/slice/userSlice';
 
 const achievementImagesAndName = [
   { achievementName: "First Streak", image: "/icon/first-streak.svg" },
@@ -19,8 +21,18 @@ const achievementImagesAndName = [
 const Profile = () => {
   const profileImage = '/profile-logo.jpg';
   const bannerImage = '/profile-banner.jpg';
-  const [suggestionsFriends, setSuggestionsFriends] = useState([]);
-  const { streak,profileData, loading, error } = useFetchProfile();
+
+  const dispatch = useDispatch();
+
+  const data = useSelector(state => state.user);
+  const profileData = data.currentUser;
+  const suggestionsFriends = data.users || [];
+
+  useEffect(() => {
+    dispatch(fetchUsers())
+    dispatch(fetchSuggestionsFriends())
+  }, []);
+
   const [followButtonLoadingByUserId, setFollowButtonLoadingByUserId] = useState([]);
   const [followedUsers, setFollowedUsers] = useState([]);
 
@@ -32,25 +44,18 @@ const Profile = () => {
         followUserId,
       });
       setFollowButtonLoadingByUserId((prev) => prev.filter((id) => id !== followUserId));
-      setFollowedUsers((prev) => [...prev, followUserId]);
+      if(followedUsers.includes(followUserId)){
+        setFollowedUsers((prev) => prev.filter((id) => id !== followUserId));
+      }else{
+        setFollowedUsers((prev) => [...prev, followUserId]);
+      }
     } catch (err) {
       setFollowButtonLoadingByUserId((prev) => prev.filter((id) => id !== followUserId));
     }
   };
 
-  useEffect(() => {
-    const fetchSuggestionsFriends = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/getSuggestionsUser/${localStorage.getItem('uid')}`);
-        setSuggestionsFriends(response.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchSuggestionsFriends();
-  }, []);
 
-  if (!profileData) {
+  if (!profileData || data.status === 'loading' || data.status === 'idle' || data.status === "failed") {
     return <div>Loading...</div>;
   }
 
@@ -92,7 +97,7 @@ const Profile = () => {
           <div className='rounded-md bg-gray-300 w-[2px]'></div>
           <div className="flex flex-col gap-1 items-center justify-center">
             <div className='flex'><FaStar className="text-gray-600 mr-1 self-center" /> Streak</div>
-            <span>{ streak}</span>
+            <span>{ data.streak}</span>
           </div>
           <div className='rounded-md bg-gray-300 w-[2px]'></div>
           <div className="flex flex-col gap-1 items-center justify-center">
@@ -113,10 +118,10 @@ const Profile = () => {
             ))}
           </div>
         </div>
-        <div>
+      {suggestionsFriends.length !== 0 && <div>
           <h2 className="text-xl font-semibold mb-2">Suggested Friends</h2>
           <div className="overflow-x-auto p-1 whitespace-nowrap no-scrollbar">
-            {suggestionsFriends.map((friend) => (
+            { suggestionsFriends.map((friend) => (
               <div key={friend._id} className="rounded-lg inline-block w-[136px] mr-3 py-4 shadow bg-gray-100">
                 <div className="flex flex-col items-center justify-center text-center">
                   <img src={"/profile-logo.jpg"} alt="Friend" className="w-12 h-12 rounded-full self-center border border-white object-cover" />
@@ -132,9 +137,9 @@ const Profile = () => {
                     <button
                       onClick={() => handleFollowUser(friend._id)}
                       className={`bg-white self-center text-blue-600 border border-blue-500 px-4 py-1 mt-2 text-sm rounded-full ${followedUsers.includes(friend._id) ? 'cursor-default' : ''}`}
-                      disabled={followedUsers.includes(friend._id)}
+                     
                     >
-                      {followedUsers.includes(friend._id) ? 'Followed' : 'Follow'}
+                      {followedUsers.includes(friend._id) ? 'unfollow' : 'Follow'}
                     </button>
                   )}
                 </div>
@@ -142,6 +147,7 @@ const Profile = () => {
             ))}
           </div>
         </div>
+}
       </div>
     </div>
   );
