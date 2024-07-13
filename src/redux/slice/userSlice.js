@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 
+
+
+// fetch your profile
 export const fetchUsers = createAsyncThunk("user/fetchUsers", async()=>{
     const response = await fetch(import.meta.env.VITE_API_URI+"/user/profile/"+localStorage.getItem("uid"));
     const data = await response.json();
@@ -15,14 +18,33 @@ export const fetchSuggestionsFriends = createAsyncThunk("user/fetchSuggestionsFr
     return data;
 });
 
+// follow unfollow user
+
+export const postFollowUser = createAsyncThunk("user/postFollowUser", async({userId, followUserId}, {rejectWithValue}) =>{
+    const response = await fetch(import.meta.env.VITE_API_URI+"/user/follow", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            userId,
+            followUserId
+        })
+    });
+    const data = await response.json();
+    return data;
+
+})
 
 
 const initialState = {
-    users: null,
-    currentUser: null,
-    status: "idle",
-    error: null,
-    streak: 0
+    users: null, 
+    currentUser: null, // to show profile
+    status: "idle", // loading, succeeded, failed
+    error: null, // error message
+    followedUsers: [], // to show follow unfollow button
+    followButtonLoadingByUserId: [], // to show loading button
+    streak: 0 // to show streak
 };
 
 export const userSlice = createSlice({
@@ -62,7 +84,27 @@ export const userSlice = createSlice({
         builder.addCase(fetchSuggestionsFriends.rejected, (state, action)=>{
             state.error = action.error.message;
             state.status = "failed";
-        })
+        }),
+        // follow unfollow user
+        builder.addCase(postFollowUser.pending, (state, action)=>{
+            state.error = null;
+            state.followButtonLoadingByUserId.push(action.meta.arg.followUserId);
+        }),
+        builder.addCase(postFollowUser.fulfilled, (state, action)=>{
+            console.log('action.payload', action.meta);
+            const {followUserId , followed } = action.meta.arg;
+            state.followButtonLoadingByUserId = state.followButtonLoadingByUserId.filter((id) => id !== followUserId);
+            if(state.followedUsers.includes(followUserId)){
+                state.followedUsers = state.followedUsers.filter((id) => id !== followUserId);
+            }else {
+                state.followedUsers.push(followUserId);
+            }
+        }),
+        builder.addCase(postFollowUser.rejected, (state, action)=>{
+            state.followButtonLoadingByUserId = state.followButtonLoadingByUserId.filter((id) => id !== action.meta.arg.followUserId);
+            state.error = action.error.message;
+        }
+        )
     }
 });
 

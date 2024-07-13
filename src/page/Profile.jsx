@@ -1,11 +1,9 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FaUserFriends, FaNotesMedical, FaUser, FaStar, FaTrophy } from 'react-icons/fa';
 import 'tailwindcss/tailwind.css';
-import useFetchProfile from '../hooks/useFetchProfile';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { CurrentUser, fetchSuggestionsFriends, fetchUsers } from '../redux/slice/userSlice';
+import {  fetchSuggestionsFriends, fetchUsers, postFollowUser } from '../redux/slice/userSlice';
 
 const achievementImagesAndName = [
   { achievementName: "First Streak", image: "/icon/first-streak.svg" },
@@ -33,27 +31,12 @@ const Profile = () => {
     dispatch(fetchSuggestionsFriends())
   }, []);
 
-  const [followButtonLoadingByUserId, setFollowButtonLoadingByUserId] = useState([]);
-  const [followedUsers, setFollowedUsers] = useState([]);
+  const followedUsers = data.followedUsers;
+  const followButtonLoadingByUserId = data.followButtonLoadingByUserId;
 
   const handleFollowUser = async (followUserId) => {
-    setFollowButtonLoadingByUserId((prev) => [...prev, followUserId]);
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URI}/user/follow`, {
-        userId: localStorage.getItem('uid'),
-        followUserId,
-      });
-      setFollowButtonLoadingByUserId((prev) => prev.filter((id) => id !== followUserId));
-      if(followedUsers.includes(followUserId)){
-        setFollowedUsers((prev) => prev.filter((id) => id !== followUserId));
-      }else{
-        setFollowedUsers((prev) => [...prev, followUserId]);
-      }
-    } catch (err) {
-      setFollowButtonLoadingByUserId((prev) => prev.filter((id) => id !== followUserId));
-    }
+    dispatch(postFollowUser({ userId : localStorage.getItem('uid'), followUserId }));
   };
-
 
   if (!profileData || data.status === 'loading' || data.status === 'idle' || data.status === "failed") {
     return <div>Loading...</div>;
