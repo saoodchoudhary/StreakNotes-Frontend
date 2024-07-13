@@ -6,15 +6,15 @@ import axios from 'axios';
 import { FaImage } from 'react-icons/fa';
 import {  IoSend } from 'react-icons/io5';
 import SendNotesComp from './SendNotesComp';
+import { useDispatch, useSelector } from 'react-redux';
+import { postSaveNote, setIsSaved } from '../../redux/slice/noteSlice';
 
 const AddNotesInput = () => {
   const editorRef = useRef(null);
   const allBtnRef = useRef(null);
-  const [noteId, setNoteId] = useState(null); // to store the note ID
   const [content, setContent] = useState('');
   const [isSendNotes, setIsSendNotes] = useState(false); 
-  const [isSaved, setIsSaved] = useState(false); // to check if the note is saved or not
-  const [isLoading, setIsLoading] = useState(false); // to check if the note is saved or not
+
   const [activeFormats, setActiveFormats] = useState({
     bold: false,
     italic: false,
@@ -26,6 +26,12 @@ const AddNotesInput = () => {
     blueText: false,
     greenText: false,
   });
+
+  const dispatch = useDispatch();
+
+  const notes = useSelector(state => state.note);
+  const isSaved = notes.isSaved;
+  const noteId = notes.noteId;
 
   // bottom height of the editor
   const [bottomHeight, setBottomHeight] = useState(0);
@@ -81,42 +87,21 @@ const AddNotesInput = () => {
 
   const saveNotes = async () => {
     console.log('saving note');
-    setIsLoading(true);
 
-    
-        // get today's date
-      const todayDate = new Date();
-      const dateId = todayDate.toISOString().slice(0, 10);
-
-     axios.post(import.meta.env.VITE_API_URI+'/notes/save-note', { noteId, dateId: dateId,    content: editorRef.current.innerHTML, uid: localStorage.getItem('uid')})
-     .then((response) => { 
-        console.log('response', response.data);
-        setIsSaved(true);
-        setIsLoading(false);
-        if (!noteId) {
-          console.log('noteId', response.data.noteId);
-          setNoteId(response.data.noteId);
-        }
-
-     }).catch((error) => {
-       console.error('Failed to save note', error); 
-       setIsLoading(false);
-       });
+    dispatch(postSaveNote({content: editorRef.current.innerHTML, noteId: noteId}));
    
   };
 
-  
 
   useEffect(() => {
-    setIsSaved(false);
+    dispatch(setIsSaved(false));    
     console.log(content);
     const saveNote = setTimeout(() => {
        saveNotes();
-    }, 800);
+    }, 500);
 
     return () => clearTimeout(saveNote); 
   }, [content]);
-
 
 
 
@@ -125,7 +110,6 @@ const AddNotesInput = () => {
       <div className='fixed top-[0] right-6 z-50'>
         
       <div onClick={()=>{setIsSendNotes(prev => !prev)}} className=' flex h-[60px] items-center justify-center align-middle  text-green-700'><IoSend className='self-center'/></div>
-     
       </div> 
           
           {(isSaved) ? <div className='h-2 w-2 bg-green-500 rounded-full fixed top-[70px] right-4 z-40'></div> : <div  className='h-2 w-2 bg-red-500 z-40 rounded-full fixed top-[70px] right-4 animate-pulse'></div> }
