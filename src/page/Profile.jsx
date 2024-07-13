@@ -136,7 +136,7 @@ const Profile = () => {
                   ) : (
                     <button
                       onClick={() => handleFollowUser(friend._id)}
-                      className={`bg-white self-center text-blue-600 border border-blue-500 px-4 py-1 mt-2 text-sm rounded-full ${followedUsers.includes(friend._id) ? 'cursor-default' : ''}`}
+                      className={`bg-white self-center text-blue-600 border border-blue-500 px-4 py-1 mt-2 text-sm rounded-full`}
                      
                     >
                       {followedUsers.includes(friend._id) ? 'unfollow' : 'Follow'}
