@@ -31,10 +31,11 @@ const Login = () => {
     }
   };
 
-  const { values, errors, handleChange, handleSubmit, isLoading, setIsLoading } = useForm(submitCallback, initialValues);
+  const { values, errors, handleChange, handleSubmit, isLoading, setIsLoading } = useForm(submitCallback, initialValues );
 
   
   if(isLoading) {
+    console.log("loading");
     return <Loading/>;
   }
 
