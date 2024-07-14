@@ -5,6 +5,7 @@ import { validations } from "../utils/validations";
 const useForm = (submitCallback, initialValues) => {
     const [values, setValues] = useState(initialValues);
     const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -15,15 +16,18 @@ const useForm = (submitCallback, initialValues) => {
     };
     const handleSubmit = (e) => {
         e.preventDefault();
+        setIsLoading(true);
         console.log("values", values);
         const validationsError = validations(values);
         setErrors(validationsError);
         if (Object.keys(validationsError).length === 0) {
             submitCallback();
+        }else{
+            setIsLoading(false);
         }
     }
 
-    return { handleChange, handleSubmit, values, errors };
+    return { handleChange, handleSubmit, values, errors, isLoading, setIsLoading };
 };
 
 export default useForm;

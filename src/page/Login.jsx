@@ -14,7 +14,6 @@ const Login = () => {
     email: '',
     password: '',
   };
-  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -32,7 +31,7 @@ const Login = () => {
     }
   };
 
-  const { values, errors, handleChange, handleSubmit } = useForm(submitCallback, initialValues);
+  const { values, errors, handleChange, handleSubmit, isLoading, setIsLoading } = useForm(submitCallback, initialValues);
 
   
   if(isLoading) {
