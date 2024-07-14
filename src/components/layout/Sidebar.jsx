@@ -19,7 +19,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
 
  const {profileData, loading, error}= useFetchProfile();
-  if (loading) return <p>Loading...</p>;
+  
 
   return (
     <div className={`fixed min-h-[100vh] inset-0 transition-opacity duration-300 ${isOpen ? 'opacity-100 bg-gray-900 bg-opacity-50' : 'opacity-0 pointer-events-none'}`}>
@@ -27,11 +27,18 @@ const Sidebar = ({ isOpen, onClose }) => {
         <div className="flex relative justify-between items-center p-4 border-b bg-green-50">
           {/* <h2 className="text-lg font-bold">LiFE NOTES</h2> */}
          
-            <div className='flex flex-col justify-center gap-[2px] align-middle w-full  '>
+          { !loading && <div className='flex flex-col justify-center gap-[2px] align-middle w-full  '>
             <img src="/profile-logo.jpg" alt="logo" className="w-10 h-10 rounded-full self-center object-cover" />
             <div className="text-[12px] font-medium self-center">{profileData.username}</div>
             <div className="text-[14px] font-semibold self-center">{profileData.fullName}</div>
-            </div>
+            </div>}  
+            {/* skelteon */}
+            { loading && <div className='flex flex-col justify-center gap-[2px] align-middle w-full  '>
+            <div className="w-10 h-10 rounded-full self-center bg-gray-200 animate-pulse"></div>
+            <div className="w-20 h-4  rounded-sm self-center bg-gray-200 animate-pulse"></div>
+            <div className="w-24 h-5 rounded-sm self-center bg-gray-200 animate-pulse"></div>
+            </div>}
+
           <button onClick={onClose} className=' absolute top-4 right-4'>
             <FaTimes className="text-gray-700" />
           </button>
