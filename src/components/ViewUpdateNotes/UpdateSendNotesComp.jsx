@@ -30,6 +30,9 @@ const UpdateSendNotesComp = ({ NotesSample, noteId, onClose }) => {
 
     const handleSendNotes = async () => {
         console.log(selectedUsers);
+        if (selectedUsers.length === 0) {
+            return;
+        }
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URI}/notes/send`, {
                 noteId,
@@ -87,7 +90,7 @@ const UpdateSendNotesComp = ({ NotesSample, noteId, onClose }) => {
                 ))}
             </div>
             <div className='pb-4 p-4 bg-white fixed bottom-0 w-full z-20'>
-               <button disabled={selectedUsers.length === 0} onClick={handleSendNotes} className='w-full p-2 bg-blue-500 text-white rounded'>
+               <button  onClick={handleSendNotes} className='w-full p-2 bg-blue-500 text-white rounded'>
                     Send Notes
                 </button>
             </div>
