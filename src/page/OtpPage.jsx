@@ -4,12 +4,14 @@ import { IoArrowBack } from 'react-icons/io5';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import Loading from '../components/layout/Loading';
 
 const OtpPage = ({ data, onclose }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [timer, setTimer] = useState(30);
+  const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
   const { setToken } = useContext(AuthContext);
@@ -52,6 +54,7 @@ const OtpPage = ({ data, onclose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const enteredOtp = otp.join('');
 
@@ -66,11 +69,14 @@ const OtpPage = ({ data, onclose }) => {
         console.log(response.data);
         setSuccess('OTP verification successful!');
         setToken(response.data.token, response.data.uid);
+        setIsLoading(false);
         navigate('/');
       } else {
+        setIsLoading(false);
         setError(response.data.message || 'OTP verification failed');
       }
     } catch (error) {
+      setIsLoading(false);
       setError('OTP verification failed. Please try again.');
     }
   };
@@ -87,6 +93,10 @@ const OtpPage = ({ data, onclose }) => {
         setError('Failed to resend OTP');
       });
   };
+
+  if (isLoading) {
+    return <Loading/>;
+  }
 
   return (
     <div className="fixed top-0 w-full z-40 h-screen bg-gradient-to-r from-blue-500 to-teal-500">

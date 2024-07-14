@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
+import Loading from '../components/layout/Loading';
 
 const FriendsPage = () => {
   const [users, setUsers] = useState([]);
@@ -46,7 +47,7 @@ const FriendsPage = () => {
   };
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loading/>;
   }
 
   return (
