@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { validations } from "../utils/validations";
+import { loginValidations } from "../utils/validations";
 
 
-const useForm = (submitCallback, initialValues) => {
+const useForm = (submitCallback, initialValues  ) => {
     const [values, setValues] = useState(initialValues);
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +18,8 @@ const useForm = (submitCallback, initialValues) => {
         e.preventDefault();
         setIsLoading(true);
         console.log("values", values);
-        const validationsError = validations(values);
+        const validationsError = loginValidations
+        (values);
         setErrors(validationsError);
         if (Object.keys(validationsError).length === 0) {
             submitCallback();
