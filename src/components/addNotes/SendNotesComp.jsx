@@ -36,6 +36,9 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
     };
 
     const handleSendNotes = async () => {
+        if (selectedUsers.length === 0) {
+            return;
+        }
         setIsLoading(true)
         
         // get today's date
@@ -112,7 +115,7 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
             </div>
             <div className='pb-4 p-4 bg-white fixed bottom-0 w-full z-20'>
              { !sendNotesSuccess ? (<button 
-               disabled={selectedUsers.length === 0}
+              
                onClick={handleSendNotes} className='w-full p-2 bg-blue-500 text-white rounded'>
                     Send Notes
                 </button>):(
