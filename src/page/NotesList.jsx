@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import truncate from 'html-truncate';
 import { findIndexOfMonth } from '../utils/findIndexOfMonth';
 import BackBtnNavbar from '../components/layout/BackBtnNavbar';
+import Loading from '../components/layout/Loading';
 
 const NotesList = () => {
     const params = useParams();
@@ -35,7 +36,7 @@ const NotesList = () => {
     }, [params.id]);
 
     if (isLoading) {
-        return <div>Loading...</div>
+        return <Loading/>
     }
       // Array of background colors
       const backgroundColors = [

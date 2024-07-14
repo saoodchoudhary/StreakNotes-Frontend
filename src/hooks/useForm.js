@@ -17,7 +17,6 @@ const useForm = (submitCallback, initialValues  ) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        console.log("values", values);
         const validationsError = loginValidations
         (values);
         setErrors(validationsError);
