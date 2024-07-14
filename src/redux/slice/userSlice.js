@@ -55,6 +55,9 @@ export const userSlice = createSlice({
             console.log('action.payload', action.payload);
             state.currentUser = action.payload;
         },
+        setFollowedUsers: (state, action) => {
+            state.followedUsers = action.payload;
+        }
     },
     extraReducers : (builder ) =>{
         // fetch your profile
@@ -110,6 +113,7 @@ export const userSlice = createSlice({
 
 
 export const { setUser } = userSlice.actions;
+export const { setFollowedUsers } = userSlice.actions;
 
 export const CurrentUser = (state) => state.user.currentUser;
 export const suggestionFriends = (state) => state.user.users;
