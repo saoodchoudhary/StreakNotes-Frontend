@@ -8,11 +8,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import OtpPage from './OtpPage';
 import { validations } from '../utils/validations';
+import Loading from '../components/layout/Loading';
 
 const Register = () => {
   const navigate = useNavigate();
   const { setToken } = useContext(AuthContext);
   const [openOtp, setOpenOtp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const initialValues = {
     fullName: '',
@@ -34,6 +36,7 @@ const Register = () => {
         body: JSON.stringify({ email: values.email }),
       });
       const data = await response.json();
+      setIsLoading(false)
 
       if (!response.ok) {
         if (data.message) {
@@ -49,6 +52,7 @@ const Register = () => {
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
       throw error;
+      setIsLoading(false);
     }
   };
 
@@ -61,14 +65,22 @@ const Register = () => {
   };
 
   const handleSubmit = (e) => {
+
     e.preventDefault();
+    setIsLoading(true);
     console.log('values', values);
     const validationsError = validations(values);
     setErrors(validationsError);
     if (Object.keys(validationsError).length === 0) {
       submitCallback();
+    }else{
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>

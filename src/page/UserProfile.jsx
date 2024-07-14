@@ -6,6 +6,7 @@ import useFetchProfile from '../hooks/useFetchProfile';
 import { Link, useParams } from 'react-router-dom';
 import BackBtnNavbar from '../components/layout/BackBtnNavbar';
 import { IoAdd } from 'react-icons/io5';
+import Loading from '../components/layout/Loading';
 
 
 const achievementImagesAndName = [
@@ -97,7 +98,7 @@ const UserProfile = () => {
   }));
 
   if (!profileData) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

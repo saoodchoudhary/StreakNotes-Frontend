@@ -4,6 +4,7 @@ import 'tailwindcss/tailwind.css';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {  fetchSuggestionsFriends, fetchUsers, postFollowUser } from '../redux/slice/userSlice';
+import Loading from '../components/layout/Loading';
 
 const achievementImagesAndName = [
   { achievementName: "First Streak", image: "/icon/first-streak.svg" },
@@ -39,7 +40,7 @@ const Profile = () => {
   };
 
   if (!profileData || data.status === 'loading' || data.status === 'idle' || data.status === "failed") {
-    return <div>Loading...</div>;
+    return <Loading/>;
   }
 
   const unlockedAchievements = profileData.achievements || [];
@@ -102,7 +103,12 @@ const Profile = () => {
           </div>
         </div>
       {suggestionsFriends.length !== 0 && <div>
+        <div className='flex justify-between'>
           <h2 className="text-xl font-semibold mb-2">Suggested Friends</h2>
+          <Link to={"/friends"} className='mr-2'>
+            <span>See All</span>
+          </Link>
+        </div>
           <div className="overflow-x-auto p-1 whitespace-nowrap no-scrollbar">
             { suggestionsFriends.map((friend) => (
               <div key={friend._id} className="rounded-lg inline-block w-[136px] mr-3 py-4 shadow bg-gray-100">

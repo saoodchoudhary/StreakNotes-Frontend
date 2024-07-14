@@ -1,11 +1,12 @@
 // src/components/Login.js
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { FiLogIn } from 'react-icons/fi';
 import useForm from '../hooks/useForm';
 import { submitFormData } from '../hooks/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import Loading from '../components/layout/Loading';
 
 const Login = () => {
   const { setToken } = useContext(AuthContext);
@@ -13,21 +14,30 @@ const Login = () => {
     email: '',
     password: '',
   };
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const submitCallback = async () => {
+    setIsLoading(true);
     try {
       const response = await submitFormData(values, "login");
       console.log('Login successful', response);
       setToken(response.token, response.uid);
+      setIsLoading(false);
       navigate('/');
     } catch (error) {
       console.error('Login failed', error);
+      setIsLoading(false);
     }
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm(submitCallback, initialValues);
+
+  
+  if(isLoading) {
+    return <Loading/>;
+  }
 
   return (
     <>
