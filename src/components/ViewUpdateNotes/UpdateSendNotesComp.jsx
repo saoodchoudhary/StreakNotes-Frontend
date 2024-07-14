@@ -87,7 +87,7 @@ const UpdateSendNotesComp = ({ NotesSample, noteId, onClose }) => {
                 ))}
             </div>
             <div className='pb-4 p-4 bg-white fixed bottom-0 w-full z-20'>
-                <button onClick={handleSendNotes} className='w-full p-2 bg-blue-500 text-white rounded'>
+               <button disabled={selectedUsers.length === 0} onClick={handleSendNotes} className='w-full p-2 bg-blue-500 text-white rounded'>
                     Send Notes
                 </button>
             </div>
