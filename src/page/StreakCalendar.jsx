@@ -35,8 +35,8 @@ const StreakCalendar = () => {
     };
   }, []);
 
-  const [streakDates, setStreakDates] = useState(["2024-07-07", "2024-07-08", "2024-07-13", "2024-07-14", "2024-07-15", "2024-07-16", "2024-07-17",  "2024-07-19", "2024-07-20", "2024-07-21" ,"2024-07-27", "2024-07-28", "2024-07-29", "2024-07-30", "2024-07-31"]);
-  const [streakRestoreDates, setStreakRestoreDates] = useState(['2024-07-12', '2024-07-18', '2024-07-23', '2024-07-24', '2024-07-25', '2024-07-26',]);
+  const [streakDates, setStreakDates] = useState([]);
+  const [streakRestoreDates, setStreakRestoreDates] = useState([]);
 
 
   useEffect(() => {
@@ -46,8 +46,8 @@ const StreakCalendar = () => {
           userId: localStorage.getItem('uid')
         });
         // console.log(response.data);
-        // setStreakDates(response.data.streakDates);
-        // setStreakRestoreDates(response.data.streakRestoreDates);
+        setStreakDates(response.data.streakDates);
+        setStreakRestoreDates(response.data.streakRestoreDates);
       }
       catch(error){
         console.log(error);
