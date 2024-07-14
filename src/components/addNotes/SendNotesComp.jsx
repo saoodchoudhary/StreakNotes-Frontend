@@ -111,7 +111,9 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
                 ))}
             </div>
             <div className='pb-4 p-4 bg-white fixed bottom-0 w-full z-20'>
-             { !sendNotesSuccess ? (<button onClick={handleSendNotes} className='w-full p-2 bg-blue-500 text-white rounded'>
+             { !sendNotesSuccess ? (<button 
+               disabled={selectedUsers.length === 0}
+               onClick={handleSendNotes} className='w-full p-2 bg-blue-500 text-white rounded'>
                     Send Notes
                 </button>):(
                     isLoading ? <div className='w-full border border-blue-500 rounded flex justify-center p-2'> 
