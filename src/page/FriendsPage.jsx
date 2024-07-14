@@ -5,13 +5,20 @@ import axios from 'axios';
 import { BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import Loading from '../components/layout/Loading';
+import { useDispatch, useSelector } from 'react-redux';
+import { postFollowUser, setFollowedUsers } from '../redux/slice/userSlice';
 
 const FriendsPage = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestedUsers, setSuggestedUsers] = useState([]);
-  const [isFollowStatus, setIsFollowStatus] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  const dispatch = useDispatch();
+
+  const data = useSelector(state => state.user);
+  const followedUsers = data.followedUsers;
+  const followButtonLoadingByUserId = data.followButtonLoadingByUserId;
 
   useEffect(() => {
     const fetchSuggestedUsers = async () => {
@@ -19,6 +26,12 @@ const FriendsPage = () => {
         const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/getAllUsers`);
         setSuggestedUsers(response.data);
         setIsLoading(false);
+        const res = await axios.get(`${import.meta.env.VITE_API_URI}/user/profile/${localStorage.getItem('uid')}`);
+        if(res.data.following && res.data.following.length > 0){
+          dispatch(setFollowedUsers(res.data.following));
+        }
+
+        console.log('data', data);
       } catch (error) {
         console.error('Error fetching suggested users:', error);
       }
@@ -36,14 +49,8 @@ const FriendsPage = () => {
     }
   };
 
-  const handleFollow = async (userId) => {
-    try {
-      await axios.post(`${import.meta.env.VITE_API_URI}/user/follow`, { userId: localStorage.getItem('uid'), followUserId: userId });
-      setIsFollowStatus(prev => ({ ...prev, [userId]: true }));
-
-    } catch (error) {
-      console.error('Error following user:', error);
-    }
+  const handleFollow = async (followUserId) => {
+    dispatch(postFollowUser({ userId : localStorage.getItem('uid'), followUserId : followUserId }));
   };
 
   if (isLoading) {
@@ -79,9 +86,9 @@ const FriendsPage = () => {
              </Link>
             <button
               onClick={() => handleFollow(user._id)}
-              className="p-1 px-4 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors text-sm"
+              className="p-1 px-4 text-blue-600 bg-white rounded-lg border hover:bg-blue-700 transition-colors text-sm"
             >
-                {isFollowStatus[user._id] ? 'Followed' : 'Follow'}
+                 {followedUsers.includes(user._id) ? 'unfollow' : 'Follow'}
             </button>
           </div>
         ))}
@@ -103,7 +110,7 @@ const FriendsPage = () => {
             onClick={() => handleFollow(user._id)}
             className="p-1 px-4 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors text-sm"
           >
-              {isFollowStatus[user._id] ? 'Followed' : 'Follow'}
+               {followedUsers.includes(user._id) ? 'unfollow' : 'Follow'}
           </button>
         </div>
         ))}
