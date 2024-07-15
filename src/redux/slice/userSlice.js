@@ -4,7 +4,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 
 // fetch your profile
-export const fetchUsers = createAsyncThunk("user/fetchUsers", async(
+export const fetchCurrentUsers = createAsyncThunk("user/fetchUsers", async(
+    {userId}, {rejectWithValue}
+)=>{
+    const response = await fetch(import.meta.env.VITE_API_URI+"/user/profile/"+userId);
+    const data = await response.json();
+    return data;
+});
+
+//fetch another user profile
+export const fetchFriendProfileUser = createAsyncThunk("user/fetchProfileUser", async(
     {userId}, {rejectWithValue}
 )=>{
     const response = await fetch(import.meta.env.VITE_API_URI+"/user/profile/"+userId);
@@ -44,13 +53,17 @@ export const postFollowUser = createAsyncThunk("user/postFollowUser", async({use
 const initialState = {
     users: null, 
     currentUser: null, // to show profile
+    profileUser: null, // to show profile for another user
     status: "idle", // loading, succeeded, failed
     error: null, // error message
     followedUsers: [], // to show follow unfollow button
     followButtonLoadingByUserId: [], // to show loading button
     streak: 0, // to show streak
-    following: [], // to show following
-    followers: [] // to show followers
+    profileUserfollowing: [], // to show  user following
+    profileUserfollowers: [], // to show  user followers
+     
+    currentUserFollowing: [], // to show current user following
+    currentUserFollowers: [], // to show current user followers
 };
 
 export const userSlice = createSlice({
@@ -67,28 +80,55 @@ export const userSlice = createSlice({
     },
     extraReducers : (builder ) =>{
         // fetch your profile
-        builder.addCase(fetchUsers.pending, (state, action) => {
+        builder.addCase(fetchCurrentUsers.pending, (state, action) => {
             state.error = null;
             state.status = "loading";
         }),
-        builder.addCase(fetchUsers.fulfilled, (state, action) => {
+        builder.addCase(fetchCurrentUsers.fulfilled, (state, action) => {
             state.currentUser = action.payload;
             state.streak = action.payload.streaks[0].streakCount;
-            state.following = action.payload.following;
-            state.followers = action.payload.followers;
+            state.currentUserFollowing = action.payload.following;
+            state.currentUserFollowers = action.payload.followers;
+
+            
+
             // check if the user is following the user or not
-            if(action.meta.arg.userId !== localStorage.getItem('uid')){
-                if(action.payload.followers.includes(localStorage.getItem('uid'))){
-                    state.followedUsers.push(action.payload._id);
-                }
-            }
+            // if(action.meta.arg.userId !== localStorage.getItem('uid')){
+            //     if(action.payload.followers.includes(localStorage.getItem('uid'))){
+            //         state.followedUsers.push(action.payload._id);
+            //     }
+            // }
             state.status = "succeeded";
         }),
-        builder.addCase(fetchUsers.rejected, (state, action)=>{
+        builder.addCase(fetchCurrentUsers.rejected, (state, action)=>{
             state.error = action.error.message;
             console.log('action.error.message', action.error.message);
             state.status = "failed";
         }),
+
+        // fetch another user profile
+        builder.addCase(fetchFriendProfileUser.pending, (state, action) => {
+            state.error = null;
+            state.status = "loading";
+        }),
+        builder.addCase(fetchFriendProfileUser.fulfilled, (state, action) => {
+            state.profileUser = action.payload;
+            state.status = "succeeded";
+            state.profileUserfollowers = action.payload.followers;
+            state.profileUserfollowing = action.payload.following;
+
+            // check if the user is follow the user or not
+            if(action.payload.followers.includes(localStorage.getItem('uid'))){
+                    state.followedUsers.push(action.payload._id);
+            }
+        }
+        ),
+        builder.addCase(fetchFriendProfileUser.rejected, (state, action) => {
+            state.error = action.error.message;
+            state.status = "failed";
+        }
+        ),
+
         // suggestion friends
         builder.addCase(fetchSuggestionsFriends.pending, (state, action)=>{
             state.error = null;
@@ -115,11 +155,13 @@ export const userSlice = createSlice({
 
             if(action.payload.message === "Followed"){
                 state.followedUsers.push(followUserId);
-                state.followers.push(userId);
+                state.profileUserfollowers.push(userId);
+                state.currentUserFollowing.push(followUserId);
             }
             else{
                 state.followedUsers = state.followedUsers.filter((id) => id !== followUserId);
-                state.followers = state.followers.filter((id) => id !== userId);
+                state.profileUserfollowers = state.profileUserfollowers.filter((id) => id !== userId);
+                state.currentUserFollowing = state.currentUserFollowing.filter((id) => id !== followUserId);
             }
 
         }),
