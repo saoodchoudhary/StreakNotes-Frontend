@@ -28,8 +28,8 @@ const Profile = () => {
   const suggestionsFriends = data.users || [];
 
   useEffect(() => {
-    dispatch(fetchUsers())
-    dispatch(fetchSuggestionsFriends())
+    dispatch(fetchUsers({ userId: localStorage.getItem('uid') }));
+    dispatch(fetchSuggestionsFriends({ userId: localStorage.getItem('uid') }));
   }, []);
 
   const followedUsers = data.followedUsers;
