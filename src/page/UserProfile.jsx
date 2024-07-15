@@ -8,7 +8,7 @@ import BackBtnNavbar from '../components/layout/BackBtnNavbar';
 import { IoAdd } from 'react-icons/io5';
 import Loading from '../components/layout/Loading';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSuggestionsFriends, fetchUsers, postFollowUser } from '../redux/slice/userSlice';
+import { fetchFriendProfileUser, fetchSuggestionsFriends,  postFollowUser } from '../redux/slice/userSlice';
 
 
 const achievementImagesAndName = [
@@ -33,11 +33,11 @@ const UserProfile = () => {
   // const [followButtonLoadingByUserId, setFollowButtonLoadingByUserId] = useState([]);
   // const [followedUsers, setFollowedUsers] = useState([]);
   //   const [profileData, setProfileData] = useState({});
-    const [isFollowStatus, setIsFollowStatus] = useState(false);
+    // const [isFollowStatus, setIsFollowStatus] = useState(false);
 
     const dispatch = useDispatch();
     const data = useSelector(state => state.user);
-    const profileData = data.currentUser;
+    const profileData = data.profileUser;
     const suggestionsFriends = data.users || [];
     const followedUsers = data.followedUsers;
     console.log('followedUsers', followedUsers);
@@ -53,7 +53,7 @@ const UserProfile = () => {
   };
 
     useEffect(() => {
-      dispatch(fetchUsers( {userId: id}));
+      dispatch(fetchFriendProfileUser( {userId: id}));
       dispatch(fetchSuggestionsFriends( {userId: id}));
     }, [id]);
 
@@ -87,11 +87,11 @@ const UserProfile = () => {
         <div className="flex justify-around items-center mb-8">
           <Link to={`/profile/follower-following/followers/${id}`} className="flex items-center">
             <FaUserFriends className="text-green-500 mr-2" />
-            <span>Followers { data.followers.length }</span>
+            <span>Followers { data.profileUserfollowers.length }</span>
           </Link>
           <Link to={`/profile/follower-following/following/${id}`} className="flex items-center">
             <FaUser className="text-yellow-500 mr-2" />
-            <span>Following {data.following.length }</span>
+            <span>Following {data.profileUserfollowing.length }</span>
           </Link>
         </div>
         {/* follow button */}

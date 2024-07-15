@@ -3,7 +3,7 @@ import { FaUserFriends, FaNotesMedical, FaUser, FaStar, FaTrophy } from 'react-i
 import 'tailwindcss/tailwind.css';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {  fetchSuggestionsFriends, fetchUsers, postFollowUser } from '../redux/slice/userSlice';
+import {  fetchCurrentUsers, fetchSuggestionsFriends,  postFollowUser } from '../redux/slice/userSlice';
 import Loading from '../components/layout/Loading';
 
 const achievementImagesAndName = [
@@ -28,7 +28,7 @@ const Profile = () => {
   const suggestionsFriends = data.users || [];
 
   useEffect(() => {
-    dispatch(fetchUsers({ userId: localStorage.getItem('uid') }));
+    dispatch(fetchCurrentUsers({ userId: localStorage.getItem('uid') }));
     dispatch(fetchSuggestionsFriends({ userId: localStorage.getItem('uid') }));
   }, []);
 
@@ -66,11 +66,11 @@ const Profile = () => {
         <div className="flex justify-around items-center mb-8">
           <Link to={`/profile/follower-following/followers/${localStorage.getItem("uid")}`} className="flex items-center">
             <FaUserFriends className="text-green-500 mr-2" />
-            <span>Followers {profileData.followers && profileData.followers.length}</span>
+            <span>Followers {data.currentUserFollowers.length}</span>
           </Link>
           <Link to={`/profile/follower-following/following/${localStorage.getItem("uid")}`} className="flex items-center">
             <FaUser className="text-yellow-500 mr-2" />
-            <span>Following {profileData.following && profileData.following.length}</span>
+            <span>Following {data.currentUserFollowing.length}</span>
           </Link>
         </div>
         <div className="mb-6 flex bg-white shadow-sm border  rounded-sm justify-around px-2 text-black py-4 text-center">
