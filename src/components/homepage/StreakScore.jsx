@@ -1,10 +1,23 @@
- import React from 'react'
-import useFetchProfile from '../../hooks/useFetchProfile';
+ import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCurrentUsers } from '../../redux/slice/userSlice';
+import Loading from '../layout/Loading';
  
  const StreakScore = () => {
 
-  // fetch profile data
-  const { streak, profileData, loading, error } = useFetchProfile();
+  const dispatch = useDispatch();
+  const data = useSelector(state => state.user);
+  const profileData = data.currentUser;
+  const streak = data.streak;
+
+  useEffect(() => {
+    dispatch(fetchCurrentUsers({userId: localStorage.getItem('uid')}));
+  }, []);
+
+  if(!profileData){
+    return <Loading />
+  };
+
 
 
    return (
