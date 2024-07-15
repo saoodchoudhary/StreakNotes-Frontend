@@ -38,18 +38,16 @@ const StreakCalendar = () => {
   const [streakDates, setStreakDates] = useState([]);
   const [streakRestoreDates, setStreakRestoreDates] = useState([]);
 
-
   useEffect(() => {
     const fetchStreakAndRestoreDates = async () => {
-      try{
+      try {
         const response = await axios.post(`${import.meta.env.VITE_API_URI}/streaks/getStreakAndRestoreDates`, {
           userId: localStorage.getItem('uid')
         });
-        // console.log(response.data);
+        // Uncomment the lines below to use fetched data
         setStreakDates(response.data.streakDates);
         setStreakRestoreDates(response.data.streakRestoreDates);
-      }
-      catch(error){
+      } catch (error) {
         console.log(error);
       }
     };
@@ -57,8 +55,46 @@ const StreakCalendar = () => {
     fetchStreakAndRestoreDates();
   }, []);
 
-  // const streakDates = ['2024-07-10', '2024-07-15']; // Example streak dates
   const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+  const isConsecutive = (date1, date2) => {
+    const day1 = new Date(date1);
+    const day2 = new Date(date2);
+    return (day2 - day1) / (1000 * 60 * 60 * 24) === 1;
+  };
+
+  const generateClassNames = (currentDay, streakDates) => {
+    const currentIndex = streakDates.indexOf(currentDay);
+    if (currentIndex === -1) return '';
+    const previousDay = streakDates[currentIndex - 1];
+    const nextDay = streakDates[currentIndex + 1];
+    const isStartOfStreak = !previousDay || !isConsecutive(previousDay, currentDay);
+    const isEndOfStreak = !nextDay || !isConsecutive(currentDay, nextDay);
+
+    if (isStartOfStreak && isEndOfStreak) return ' one-streak ';
+
+    let classNames = 'streak ';
+    if (isStartOfStreak) classNames += 'start-streak ';
+    if (isEndOfStreak) classNames += 'end-streak';
+    return classNames.trim();
+  };
+
+  const generateRestoreClassNames = (currentDay, streakRestoreDates) => {
+    const currentIndex = streakRestoreDates.indexOf(currentDay);
+    if (currentIndex === -1) return '';
+    const previousDay = streakRestoreDates[currentIndex - 1];
+    const nextDay = streakRestoreDates[currentIndex + 1];
+    const isStartOfStreak = !previousDay || !isConsecutive(previousDay, currentDay);
+    const isEndOfStreak = !nextDay || !isConsecutive(currentDay, nextDay);
+
+    if (isStartOfStreak && isEndOfStreak) return 'one-restore-streak';
+
+    let classNames = 'restore-streak ';
+    if (isStartOfStreak) classNames += 'start-restore ';
+    if (isEndOfStreak) classNames += 'end-restore';
+    return classNames.trim();
+  };
+
 
   return (
     <div className="calendar-container bg-white pb-[50px]" ref={scrollRef} style={{ overflowY: 'auto', height: '100vh' }}>
@@ -71,26 +107,34 @@ const StreakCalendar = () => {
           <div key={index} className="month-box">
             <h2 className="month-title">{format(month, 'MMMM yyyy')}</h2>
             <div className="days-of-week">
-              {daysOfWeek.map((day,_) => (
+              {daysOfWeek.map((day, _) => (
                 <div key={_} className="day-header">{day}</div>
               ))}
             </div>
             <div className="days-grid">
               {emptyDays}
-              {daysInMonth.map((day, _) => (
-               <Link 
-               key={"i"+_}
-               to={`/notes/list/${format(day, 'yyyy-MM-dd')}`}
-               className='link-box'> 
-               
-               <div
-                  id={format(day, 'yyyy-MM-dd')}
-                  className={`day-box ${streakRestoreDates.includes(format(day, 'yyyy-MM-dd')) ? 'restore-streak' : ''} ${streakDates.includes(format(day, 'yyyy-MM-dd')) ? 'streak' : ''}  `}
-                >
-                  {format(day, 'd')}
-                </div>
-                </Link>
-              ))}
+              {daysInMonth.map((day, _) => {
+                const formattedDay = format(day, 'yyyy-MM-dd');
+                const isStreakDay = streakDates.includes(formattedDay);
+                const isRestoreDay = streakRestoreDates.includes(formattedDay);
+                const classNames = generateClassNames(formattedDay, streakDates);
+                const restoreClassNames = generateRestoreClassNames(formattedDay, streakRestoreDates);
+
+                return (
+                  <Link
+                    key={"i" + _}
+                    to={`/notes/list/${formattedDay}`}
+                    className={`link-box ${isStreakDay ? classNames : ''} ${isRestoreDay ? restoreClassNames : ''}`}
+                  >
+                    <div
+                      id={formattedDay}
+                      className={`day-box ${isStreakDay ? classNames : ''}`}
+                    >
+                      {format(day, 'd')}
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         );
@@ -100,3 +144,4 @@ const StreakCalendar = () => {
 };
 
 export default StreakCalendar;
+

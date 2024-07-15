@@ -40,12 +40,12 @@
   justify-content: center;
   align-items: center;
   grid-template-columns: repeat(7, 44px);
-  
 }
 
 .link-box {
   font-size: 14px;
   height: 44px;
+  justify-self: stretch;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -65,22 +65,68 @@
 .streak {
   background-color: #2796f7;
   height: 32px;
-  width: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  border-radius: 0; /* Initially zero */
   color: white;
 }
 
-
-.restore-streak{
+.restore-streak {
   background-color: #339605;
   height: 32px;
-  width: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  border-radius: 0; /* Initially zero */
   color: white;
+}
+
+.start-streak {
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+}
+
+.end-streak {
+  border-top-right-radius: 50%;
+  
+  border-bottom-right-radius: 50%;
+}
+
+.start-restore {
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+}
+
+.end-restore {
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+
+
+
+.one-streak{
+  background-color: #2796f7;
+  height: 32px;
+  width:  32px;
+  justify-self: center;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+
+}
+
+.one-restore-streak{
+  background-color: #339605;
+  height: 32px;
+  width:  32px;
+  justify-self: center;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+
 }
