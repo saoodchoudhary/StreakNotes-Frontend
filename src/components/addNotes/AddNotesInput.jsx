@@ -31,7 +31,7 @@ const AddNotesInput = () => {
 
   const notes = useSelector(state => state.note);
   const isSaved = notes.isSaved;
-  const noteId = notes.noteId;
+  const [noteId, setNoteId] = useState(null);
 
   // bottom height of the editor
   const [bottomHeight, setBottomHeight] = useState(0);
@@ -88,7 +88,8 @@ const AddNotesInput = () => {
   const saveNotes = async () => {
     console.log('saving note');
 
-    dispatch(postSaveNote({content: editorRef.current.innerHTML, noteId: noteId}));
+   const des = await  dispatch(postSaveNote({content: editorRef.current.innerHTML, noteId: noteId}));
+    setNoteId(des.payload.noteId);
    
   };
 

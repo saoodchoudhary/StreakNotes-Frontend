@@ -4,7 +4,6 @@ import axios from "axios";
 
 const initialState = {
     notes: [], // to store the notes
-    noteId: null, // to store the noteId
     status: 'idle', // to check the status of the fetch
     isSaved: true, // to check if the note is saved
     error: null // to store the error message
@@ -40,6 +39,7 @@ const noteSlice = createSlice({
         setIsSaved: (state, action) => {
             state.isSaved = action.payload;
         }
+
     },
     extraReducers: (builder) => {
         // Fetch Recieved Notes ---
