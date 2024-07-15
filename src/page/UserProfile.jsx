@@ -7,6 +7,8 @@ import { Link, useParams } from 'react-router-dom';
 import BackBtnNavbar from '../components/layout/BackBtnNavbar';
 import { IoAdd } from 'react-icons/io5';
 import Loading from '../components/layout/Loading';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSuggestionsFriends, fetchUsers, postFollowUser } from '../redux/slice/userSlice';
 
 
 const achievementImagesAndName = [
@@ -25,81 +27,45 @@ const UserProfile = () => {
     const {id} = useParams();
   const profileImage = '/profile-logo.jpg';
   const bannerImage = '/profile-banner.jpg';
-  const [suggestionsFriends, setSuggestionsFriends] = useState([]);
+  // const [suggestionsFriends, setSuggestionsFriends] = useState([]);
 
 
-  const [followButtonLoadingByUserId, setFollowButtonLoadingByUserId] = useState([]);
-  const [followedUsers, setFollowedUsers] = useState([]);
-    const [profileData, setProfileData] = useState({});
+  // const [followButtonLoadingByUserId, setFollowButtonLoadingByUserId] = useState([]);
+  // const [followedUsers, setFollowedUsers] = useState([]);
+  //   const [profileData, setProfileData] = useState({});
     const [isFollowStatus, setIsFollowStatus] = useState(false);
-    const [streak , setStreak] = useState(0);
+
+    const dispatch = useDispatch();
+    const data = useSelector(state => state.user);
+    const profileData = data.currentUser;
+    const suggestionsFriends = data.users || [];
+    const followedUsers = data.followedUsers;
+    console.log('followedUsers', followedUsers);
+    const followButtonLoadingByUserId = data.followButtonLoadingByUserId;
 
     
 
   console.log(profileData);
 
   const handleFollowUser = async (followUserId) => {
-    setFollowButtonLoadingByUserId((prev) => [...prev, followUserId]);
-    console.log(followButtonLoadingByUserId)
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URI}/user/follow`, {
-        userId: localStorage.getItem('uid'),
-        followUserId,
-      });
-      setFollowButtonLoadingByUserId((prev) => prev.filter((id) => id !== followUserId));
-      setFollowedUsers((prev) => [...prev, followUserId]);
-    } catch (err) {
-      setFollowButtonLoadingByUserId((prev) => prev.filter((id) => id !== followUserId));
-      console.error(err);
-    }
+    dispatch(postFollowUser({ userId : localStorage.getItem('uid'), followUserId }));
+    console.log('followUser', followedUsers);
   };
 
     useEffect(() => {
-        const fetchProfileData = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/profile/${id}`);
-                console.log( "user data", response.data)
-                setProfileData(response.data);
-                setStreak(response.data.streaks[0].streakCount);
-                if(response.data.followers === 0){
-                    setIsFollowStatus(false);
-                }else{
-                if(response.data.followers.includes(localStorage.getItem('uid'))){
-                    setIsFollowStatus(true);    
-                }else{
-                    setIsFollowStatus(false);
-                }
-            }
-
-
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        fetchProfileData();
+      dispatch(fetchUsers( {userId: id}));
+      dispatch(fetchSuggestionsFriends( {userId: id}));
     }, [id]);
 
-  useEffect(() => {
-    const fetchSuggestionsFriends = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/getSuggestionsUser/${localStorage.getItem('uid')}`);
-        setSuggestionsFriends(response.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchSuggestionsFriends();
-  }, []);
-
+  if (!profileData) {
+    return <Loading />;
+  }
   const unlockedAchievements = profileData.achievements || [];
   const achievements = achievementImagesAndName.map((achievement) => ({
     ...achievement,
     unlocked: unlockedAchievements.includes(achievement.achievementName),
   }));
 
-  if (!profileData) {
-    return <Loading />;
-  }
 
   return (
     <div className="min-h-screen mt-[60px] bg-gray-100 flex flex-col items-center"
@@ -121,21 +87,21 @@ const UserProfile = () => {
         <div className="flex justify-around items-center mb-8">
           <Link to={`/profile/follower-following/followers/${id}`} className="flex items-center">
             <FaUserFriends className="text-green-500 mr-2" />
-            <span>Followers { profileData.followers && profileData.followers.length }</span>
+            <span>Followers { data.followers.length }</span>
           </Link>
           <Link to={`/profile/follower-following/following/${id}`} className="flex items-center">
             <FaUser className="text-yellow-500 mr-2" />
-            <span>Following {profileData.following && profileData.following.length }</span>
+            <span>Following {data.following.length }</span>
           </Link>
         </div>
         {/* follow button */}
         <div className="mb-6">
-        {isFollowStatus ? (
+        {followedUsers.includes(id) ? (
             <button onClick={()=> handleFollowUser(id)} className="bg-blue-500 text-white px-4 py-2 rounded-full w-full flex justify-center">
-                Followed
+                Unfollow
             </button>
         ) : (
-            <button onClick={()=> handleFollowUser(id)} className="bg-blue-500 text-white px-4 py-2 rounded-full w-full flex justify-center">
+            <button onClick={()=> handleFollowUser(id)} className="text-blue-500 bg-white px-4 py-2 rounded-full w-full flex justify-center border border-blue-500">
                 Follow
             </button>
         )}
@@ -149,7 +115,7 @@ const UserProfile = () => {
           <div className='rounded-md bg-gray-300 w-[2px]'></div>
           <div className="flex flex-col gap-1 items-center justify-center">
             <div className='flex'><FaStar className="text-gray-600 mr-1 self-center" /> Streak</div>
-            <span>{ streak}</span>
+            <span>{ data.streak}</span>
           </div>
           <div className='rounded-md bg-gray-300 w-[2px]'></div>
           <div className="flex flex-col gap-1 items-center justify-center">
@@ -195,14 +161,12 @@ const UserProfile = () => {
                     </div>
                   ) : (
                     <button
-                      onClick={() => handleFollowUser(friend._id)}
-                      className={`bg-white self-center text-blue-600 border border-blue-500 px-4 py-1 mt-2 text-sm rounded-full ${
-                        followedUsers.includes(friend._id) ? 'cursor-default' : ''
-                      }`}
-                      disabled={followedUsers.includes(friend._id)}
-                    >
-                      {followedUsers.includes(friend._id) ? 'Followed' : 'Follow'}
-                    </button>
+                    onClick={() => handleFollowUser(friend._id)}
+                    className={`bg-white self-center text-blue-600 border border-blue-500 px-4 py-1 mt-2 text-sm rounded-full`}
+                   
+                  >
+                    {followedUsers.includes(friend._id) ? 'unfollow' : 'Follow'}
+                  </button>
                   )}
                 </div>
               </div>

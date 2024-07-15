@@ -4,16 +4,20 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 
 // fetch your profile
-export const fetchUsers = createAsyncThunk("user/fetchUsers", async()=>{
-    const response = await fetch(import.meta.env.VITE_API_URI+"/user/profile/"+localStorage.getItem("uid"));
+export const fetchUsers = createAsyncThunk("user/fetchUsers", async(
+    {userId}, {rejectWithValue}
+)=>{
+    const response = await fetch(import.meta.env.VITE_API_URI+"/user/profile/"+userId);
     const data = await response.json();
     return data;
 });
 
 // suggestion friends 
  
-export const fetchSuggestionsFriends = createAsyncThunk("user/fetchSuggestionsFriends", async()=>{
-    const response = await fetch(import.meta.env.VITE_API_URI+"/user/getSuggestionsUser/"+localStorage.getItem("uid"));
+export const fetchSuggestionsFriends = createAsyncThunk("user/fetchSuggestionsFriends", async(
+    {userId}, {rejectWithValue}
+)=>{
+    const response = await fetch(import.meta.env.VITE_API_URI+"/user/getSuggestionsUser/"+userId);
     const data = await response.json();
     return data;
 });
@@ -44,7 +48,9 @@ const initialState = {
     error: null, // error message
     followedUsers: [], // to show follow unfollow button
     followButtonLoadingByUserId: [], // to show loading button
-    streak: 0 // to show streak
+    streak: 0, // to show streak
+    following: [], // to show following
+    followers: [] // to show followers
 };
 
 export const userSlice = createSlice({
@@ -68,6 +74,14 @@ export const userSlice = createSlice({
         builder.addCase(fetchUsers.fulfilled, (state, action) => {
             state.currentUser = action.payload;
             state.streak = action.payload.streaks[0].streakCount;
+            state.following = action.payload.following;
+            state.followers = action.payload.followers;
+            // check if the user is following the user or not
+            if(action.meta.arg.userId !== localStorage.getItem('uid')){
+                if(action.payload.followers.includes(localStorage.getItem('uid'))){
+                    state.followedUsers.push(action.payload._id);
+                }
+            }
             state.status = "succeeded";
         }),
         builder.addCase(fetchUsers.rejected, (state, action)=>{
@@ -94,14 +108,20 @@ export const userSlice = createSlice({
             state.followButtonLoadingByUserId.push(action.meta.arg.followUserId);
         }),
         builder.addCase(postFollowUser.fulfilled, (state, action)=>{
-            console.log('action.payload', action.meta);
-            const {followUserId , followed } = action.meta.arg;
+            console.log('action.payload', action.payload);
+            console.log('action.meta', action.meta.arg);
+            const {followUserId , userId } = action.meta.arg;
             state.followButtonLoadingByUserId = state.followButtonLoadingByUserId.filter((id) => id !== followUserId);
-            if(state.followedUsers.includes(followUserId)){
-                state.followedUsers = state.followedUsers.filter((id) => id !== followUserId);
-            }else {
+
+            if(action.payload.message === "Followed"){
                 state.followedUsers.push(followUserId);
+                state.followers.push(userId);
             }
+            else{
+                state.followedUsers = state.followedUsers.filter((id) => id !== followUserId);
+                state.followers = state.followers.filter((id) => id !== userId);
+            }
+
         }),
         builder.addCase(postFollowUser.rejected, (state, action)=>{
             state.followButtonLoadingByUserId = state.followButtonLoadingByUserId.filter((id) => id !== action.meta.arg.followUserId);

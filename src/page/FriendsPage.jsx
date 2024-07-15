@@ -49,6 +49,17 @@ const FriendsPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (searchTerm === '') {
+      setUsers([]);
+    }
+    const timer = setTimeout(() => {
+      handleSearch();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+
   const handleFollow = async (followUserId) => {
     dispatch(postFollowUser({ userId : localStorage.getItem('uid'), followUserId : followUserId }));
   };
@@ -86,7 +97,7 @@ const FriendsPage = () => {
              </Link>
             <button
               onClick={() => handleFollow(user._id)}
-              className="p-1 px-4 text-blue-600 bg-white rounded-lg border hover:bg-blue-700 transition-colors text-sm"
+              className="p-1 px-2 text-blue-600 bg-white  hover:text-blue-700 transition-colors text-sm"
             >
                  {followedUsers.includes(user._id) ? 'unfollow' : 'Follow'}
             </button>
@@ -107,9 +118,9 @@ const FriendsPage = () => {
           </div>
           </Link>
           <button
-            onClick={() => handleFollow(user._id)}
-            className="p-1 px-4 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors text-sm"
-          >
+              onClick={() => handleFollow(user._id)}
+              className="p-1 px-2 text-blue-600 bg-white  hover:bg-blue-700 transition-colors text-sm"
+            >
                {followedUsers.includes(user._id) ? 'unfollow' : 'Follow'}
           </button>
         </div>

@@ -10,6 +10,8 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sendNotesSuccess, setSendNotesSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [nowShowSuggestUser, setNowShowSuggestUser] = useState(false);
+    // const [filteredUsers, setFilteredUsers] = useState([]);
 
     const navigate = useNavigate();
 
@@ -19,13 +21,14 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
         const fetchSendUserForNotes = async () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_API_URI}/user/getSendUserForNotes/${localStorage.getItem('uid')}`);
+                console.log(response.data);
                 setGetSendUserForNotes(response.data);
             } catch (err) {
                 console.error(err);
             }
         };
         fetchSendUserForNotes();
-    }, [noteId]);
+    }, [noteId, nowShowSuggestUser]);
 
     const handleUserSelect = (userId) => {
         setSelectedUsers((prevSelected) =>
@@ -37,6 +40,7 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
 
     const handleSendNotes = async () => {
         if (selectedUsers.length === 0) {
+
             return;
         }
         setIsLoading(true)
@@ -73,6 +77,22 @@ const SendNotesComp = ({ NotesSample, noteId, onClose }) => {
     const filteredUsers = getSendUserForNotes.filter((user) =>
         user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    useEffect(() => {
+        if (searchTerm === '') {
+            setNowShowSuggestUser(prev => !prev);
+            return;
+        }
+        const timer = setTimeout(() => {
+            axios.get(`${import.meta.env.VITE_API_URI}/user/search?term=${searchTerm}`)
+                .then((response) => {
+                    console.log("serach",response.data);
+                    setGetSendUserForNotes(response.data);
+                })
+                .catch((err) => console.error(err));
+        }, 500);
+        return () => clearTimeout(timer);
+        }, [searchTerm]);
 
     return (
         <div className='fixed top-[0px] z-50 w-full flex flex-col h-[100%] border bg-white slide-in-up '>
