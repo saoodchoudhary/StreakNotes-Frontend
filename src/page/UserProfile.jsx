@@ -68,11 +68,11 @@ const UserProfile = () => {
 
 
   return (
-    <div className="min-h-screen mt-[60px] bg-gray-100 flex flex-col items-center"
+    <div className="min-h-screen relative mt-[60px] bg-gray-100 flex flex-col "
     onLoad={()=> window.scroll(0 , 0)}>
         <BackBtnNavbar text="Profile" />
       <div className=" w-full">
-        <div className='absolute top-[60px] right-0 bg-gray-500 z-10 text-[10px] px-3 py-1 bg-gradient-to-r to-gray-100  from-transparent'>Joined 24-02-2024</div>
+        <div className='absolute top-[0px] right-0 bg-gray-500 z-10 text-[10px] px-3 py-1 bg-gradient-to-r to-gray-100  from-transparent'>Joined 24-02-2024</div>
         <img src={bannerImage} alt="Banner" className="w-full h-[150px] object-cover" />
       </div>
       <div className="w-full bg-white shadow-md rounded-lg  px-4 pb-8">

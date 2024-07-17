@@ -26,7 +26,7 @@ const FollowerFollowingPage = () => {
     , []);
 
     return (
-        <div className="flex flex-col items-center bg-gray-50 min-h-screen "
+        <div className="flex flex-col bg-gray-50 min-h-screen "
         onLoad={()=> window.scroll(0 , 0)}>
             <BackBtnNavbar text={activeTab === 'followers' ? 'Followers' : 'Following'} />
             <div className="w-full max-w-md bg-white mt-[60px] rounded-lg shadow-md px-4 min-h-screen overflow-hidden">
