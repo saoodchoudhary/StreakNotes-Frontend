@@ -2,18 +2,14 @@ import React, { useRef, useState, useEffect } from 'react';
 import { AiOutlineBold, AiOutlineItalic, AiOutlineOrderedList, AiOutlineUnorderedList } from 'react-icons/ai';
 import { BiHeading } from 'react-icons/bi';
 import { MdFormatColorText, MdKeyboardArrowRight } from 'react-icons/md';
-import axios from 'axios';
-import { FaImage } from 'react-icons/fa';
-import {  IoSend } from 'react-icons/io5';
 import SendNotesComp from './SendNotesComp';
 import { useDispatch, useSelector } from 'react-redux';
-import { postSaveNote, setIsSaved } from '../../redux/slice/noteSlice';
+import { postSaveNote, setIsSaved, setSendComponent } from '../../redux/slice/noteSlice';
 
 const AddNotesInput = () => {
   const editorRef = useRef(null);
   const allBtnRef = useRef(null);
   const [content, setContent] = useState('');
-  const [isSendNotes, setIsSendNotes] = useState(false); 
 
   const [activeFormats, setActiveFormats] = useState({
     bold: false,
@@ -30,6 +26,8 @@ const AddNotesInput = () => {
   const dispatch = useDispatch();
 
   const notes = useSelector(state => state.note);
+  const isSendNotes = notes.isSendNotes;
+  const title = notes.title;
   const isSaved = notes.isSaved;
   const [noteId, setNoteId] = useState(null);
 
@@ -88,7 +86,8 @@ const AddNotesInput = () => {
   const saveNotes = async () => {
     console.log('saving note');
 
-   const des = await  dispatch(postSaveNote({content: editorRef.current.innerHTML, noteId: noteId}));
+   const des =  await dispatch(postSaveNote({title , content: editorRef.current.innerHTML, noteId: noteId}));
+   console.log('des', des.payload);
     setNoteId(des.payload.noteId);
    
   };
@@ -102,18 +101,15 @@ const AddNotesInput = () => {
     }, 500);
 
     return () => clearTimeout(saveNote); 
-  }, [content]);
+  }, [content, title]);
 
 
 
   return (
     <div className="flex flex-col w-full" >
-      <div className='fixed top-[0] right-6 z-50'>
-        
-      <div onClick={()=>{setIsSendNotes(prev => !prev)}} className=' flex h-[60px] items-center justify-center align-middle  text-green-700'><IoSend className='self-center'/></div>
-      </div> 
+     
           
-          {(isSaved) ? <div className='h-2 w-2 bg-green-500 rounded-full fixed top-[70px] right-4 z-40'></div> : <div  className='h-2 w-2 bg-red-500 z-40 rounded-full fixed top-[70px] right-4 animate-pulse'></div> }
+      {(isSaved) ? <div className='h-2 w-2 bg-green-500 rounded-full fixed top-[70px] right-4 z-40'></div> : <div  className='h-2 w-2 bg-red-500 z-40 rounded-full fixed top-[70px] right-4 animate-pulse'></div> }
          
       <div 
         ref={editorRef} 
@@ -186,7 +182,7 @@ const AddNotesInput = () => {
         </div>
       </div>
 
-    {isSendNotes &&  <SendNotesComp NotesSample={[]} noteId={noteId} onClose={()=>{setIsSendNotes(false)}} /> }
+    {isSendNotes &&  <SendNotesComp NotesSample={[]} noteId={noteId} onClose={()=>{dispatch(setSendComponent(false))}} /> }
     </div>
   );
 };

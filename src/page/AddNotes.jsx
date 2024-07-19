@@ -13,8 +13,9 @@ const AddNotes = () => {
         {/* <NotesHeader/>
          */}
 
-         <BackBtnNavbar text={'Add Notes'}/>
+         {/* <BackBtnNavbar text={'Add Notes'}/> */}
         {/* <NotesMainSection/> */}
+        <NotesHeader/>
         <AddNotesInput/>
     </>
   )
