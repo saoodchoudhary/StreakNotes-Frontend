@@ -57,11 +57,11 @@ const NotesList = () => {
                     return (
                         <Link to={`/updateNotes/${note._id}`} key={_} >
                             <div className={`border relative ${color} rounded-md h-[200px] p-2`}>
-                                <h2>{note.title}</h2>
+                                {/* <h2>{note.title}</h2> */}
                                 <div dangerouslySetInnerHTML={{ __html: truncatedContent }}></div>
                                 <p className='absolute z-20 bottom-0 right-0 px-2 bg-orange-600 text-white text-[10px] rounded-tl-md font-medium rounded-br-md'>{date}</p>
                             </div>
-                            <h3 className='text-center'>Untitled</h3>
+                            <h3 className='text-center'>{note.title}</h3>
                         </Link>
                     )
                 })}
